@@ -1,4 +1,6 @@
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class UnitSpawner : MonoBehaviour
 {
@@ -20,6 +22,9 @@ public class UnitSpawner : MonoBehaviour
     [SerializeField]
     private int TeamNumber = 1;
 
+    [SerializeField]
+    private bool canSpawnUnits = true;
+
     private float spawnTimer = 0f;
 
     private int spawnCount = 0;
@@ -27,28 +32,39 @@ public class UnitSpawner : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
+        CombatManager.Instance.RegisterTeamTarget( this.TeamNumber, this.target );
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.spawnTimer += Time.deltaTime;
+        if ( this.canSpawnUnits )
+        {
+            this.spawnTimer += Time.deltaTime;
 
-        if ( this.spawnTimer >= this.spawnTime )
+            if ( this.spawnTimer >= this.spawnTime )
+            {
+                this.spawnTimer = 0f;
+
+                SpawnUnit();
+            }
+        }
+        else
         {
             this.spawnTimer = 0f;
-
-            SpawnUnit();
         }
     }
 
     private void SpawnUnit()
     {
+        // Instantiate the unit.
         GameObject unit = Instantiate( this.unitPrefab );
 
+        // Record how many units were spawned. We'll use this for generating the name.
         this.spawnCount++;
 
+        // Set the team number based on the name.
         if ( this.TeamNumber == 1 )
         {
             unit.name = "Blue " + this.spawnCount;
@@ -58,12 +74,19 @@ public class UnitSpawner : MonoBehaviour
             unit.name = "Red " + this.spawnCount;
         }
 
+        // Apply the colour for the unit, which will be based on the team.
         unit.GetComponentInChildren<UnitVisual>().ApplyUnitColour( this.unitMaterial );
 
-        AttackController attackController = unit.GetComponent<AttackController>();
-        attackController.Initialise( this.TeamNumber, this.spawnLocation.transform.position );
-        attackController.SetMainTarget( this.target );
+        UnitController unitController = unit.GetComponent<UnitController>();
+        unitController.InitialiseTeamNumber( this.TeamNumber );
 
+        // Set the initial unit position.
+        unit.GetComponent<NavMeshAgent>().Warp( this.spawnLocation.transform.position );
+
+        // Register the unit with the combat manager.
+        CombatManager.Instance.RegisterUnit( unitController );
+
+        // Make sure we initialise the enemy attraction detection.
         EnemyDetection enemyDetection = unit.GetComponentInChildren<EnemyDetection>();
         enemyDetection.Initialise( this.TeamNumber );
     }

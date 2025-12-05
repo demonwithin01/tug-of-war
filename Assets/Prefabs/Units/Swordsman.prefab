@@ -9368,12 +9368,10 @@ GameObject:
   m_Component:
   - component: {fileID: 438990}
   - component: {fileID: 9542722}
-  - component: {fileID: 4380027742077319585}
   - component: {fileID: 5447928952619599675}
   - component: {fileID: 3218089171380706058}
-  - component: {fileID: 1652667574415354738}
   - component: {fileID: 251133235567230784}
-  - component: {fileID: 4933412597032589495}
+  - component: {fileID: -6422805131232466101}
   m_Layer: 6
   m_Name: Swordsman
   m_TagString: Unit
@@ -9420,21 +9418,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4380027742077319585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 155132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44ec4eda4fec23c4fbf667fd6d575f46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackTarget
-  attackRange: 1.1
-  baseAttackTime: 1.5
-  baseDamage: 50
 --- !u!136 &5447928952619599675
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9480,18 +9463,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1652667574415354738
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 155132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d025f0cfb4314a46bbdfd98063f33ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UnitMovement
 --- !u!54 &251133235567230784
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9519,7 +9490,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4933412597032589495
+--- !u!114 &-6422805131232466101
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9528,10 +9499,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 155132}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38b23d372153fb84eabc5f3400157092, type: 3}
+  m_Script: {fileID: 11500000, guid: 8af8b32c373dd6e4a837758b23e0b5e7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UnitHealth
-  baseMaxHealth: 100
+  m_EditorClassIdentifier: Assembly-CSharp::UnitController
+  attackRange: 1
+  baseAttackTime: 3
+  baseDamage: 50
+  baseHealth: 100
 --- !u!1 &156456
 GameObject:
   m_ObjectHideFlags: 0

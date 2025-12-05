@@ -45,9 +45,9 @@ public class AttackController : MonoBehaviour
         this.navMeshAgent = GetComponent<NavMeshAgent>();
         this.unitHealth = GetComponent<UnitHealth>();
 
-        EnemyDetection enemyDetection = GetComponentInChildren<EnemyDetection>();
-        enemyDetection.EnemyDetected += this.EnemyDetection_EnemyDetected;
-        enemyDetection.EnemyLeft += this.EnemyDetection_EnemyLeft;
+        //EnemyDetection enemyDetection = GetComponentInChildren<EnemyDetection>();
+        //enemyDetection.EnemyDetected += this.EnemyDetection_EnemyDetected;
+        //enemyDetection.EnemyLeft += this.EnemyDetection_EnemyLeft;
 
         this.unitHealth.Died += this.UnitHealth_LostAllHealth;
     }
@@ -118,40 +118,40 @@ public class AttackController : MonoBehaviour
         
     }
 
-    private void EnemyDetection_EnemyDetected( object sender, EnemyDetection.EnemyDetectionEventArgs e )
-    {
-        if ( e.Unit.unitHealth.IsAlive == false )
-        {
-            return;
-        }
+    //private void EnemyDetection_EnemyDetected( object sender, EnemyDetection.EnemyDetectionEventArgs e )
+    //{
+    //    if ( e.OpposingTeamUnit.unitHealth.IsAlive == false )
+    //    {
+    //        return;
+    //    }
 
-        if ( this.currentAttackTarget == null )
-        {
-            AttackNewTarget( e.Unit );
-        }
-        else
-        {
-            this.alternateAttackTargets.Add( e.Unit );
-        }
+    //    if ( this.currentAttackTarget == null )
+    //    {
+    //        AttackNewTarget( e.OpposingTeamUnit );
+    //    }
+    //    else
+    //    {
+    //        this.alternateAttackTargets.Add( e.OpposingTeamUnit );
+    //    }
 
-        //e.UnitHealth.Died += TrackedEnemyDied;
-    }
+    //    //e.UnitHealth.Died += TrackedEnemyDied;
+    //}
 
-    private void EnemyDetection_EnemyLeft( object sender, EnemyDetection.EnemyDetectionEventArgs e )
-    {
-        if ( this.currentAttackTarget == e.Unit )
-        {
-            this.currentAttackTarget = null;
+    //private void EnemyDetection_EnemyLeft( object sender, EnemyDetection.EnemyDetectionEventArgs e )
+    //{
+    //    if ( this.currentAttackTarget == e.OpposingTeamUnit )
+    //    {
+    //        this.currentAttackTarget = null;
 
-            FindNewTarget();
-        }
-        else if ( this.alternateAttackTargets.Contains( e.Unit ) )
-        {
-            this.alternateAttackTargets.Remove( e.Unit );
-        }
+    //        FindNewTarget();
+    //    }
+    //    else if ( this.alternateAttackTargets.Contains( e.OpposingTeamUnit ) )
+    //    {
+    //        this.alternateAttackTargets.Remove( e.OpposingTeamUnit );
+    //    }
 
-        //e.UnitHealth.Died -= TrackedEnemyDied;
-    }
+    //    //e.UnitHealth.Died -= TrackedEnemyDied;
+    //}
 
     private void UnitHealth_LostAllHealth( object sender, UnitHealth.DiedEventArgs e )
     {

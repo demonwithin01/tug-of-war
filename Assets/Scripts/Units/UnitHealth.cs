@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-[RequireComponent( typeof( AttackController ) )]
 public class UnitHealth : MonoBehaviour
 {
     public class DiedEventArgs
