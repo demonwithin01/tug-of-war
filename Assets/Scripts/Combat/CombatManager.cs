@@ -100,6 +100,14 @@ public class CombatManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Gets the players team.
+    /// </summary>
+    public CombatTeam FindPlayerTeam()
+    {
+        return FindTeam( 1 );
+    }
+
+    /// <summary>
     /// Finds the team that a unit belongs to.
     /// </summary>
     private CombatTeam FindTeamForUnit( UnitController unit )

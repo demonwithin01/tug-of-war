@@ -33,6 +33,15 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     private int baseHealth = 100;
 
+    [SerializeField]
+    private float baseSpeed = 3.5f;
+
+    [SerializeField]
+    private int baseGold = 1;
+
+    [SerializeField]
+    private Transform coinPrefab;
+
     // States
     private bool isMoving = true;
     private bool isAttacking = false;
@@ -58,6 +67,11 @@ public class UnitController : MonoBehaviour
     /// This is primarily used in case the animation frame ends when on another target.
     /// </remarks>
     private UnitController performingAttackAgainst;
+
+    /// <summary>
+    /// The combat unit that manages the team information.
+    /// </summary>
+    private CombatUnit combatUnit;
 
     /// <summary>
     /// Gets the team number that this unit is assigned to.
@@ -223,6 +237,19 @@ public class UnitController : MonoBehaviour
     }
 
     /// <summary>
+    /// Initialises the combat unit instance that maintains the unit's team.
+    /// </summary>
+    public void InitialiseCombatUnit( CombatUnit combatUnit )
+    {
+        this.combatUnit = combatUnit;
+
+        this.attackTimer = new TimedAction( this.baseAttackTime / this.combatUnit.Multipliers.AttackSpeed, PerformAttack );
+        this.attackTimer.ResetToTrigger();
+
+        this.navMeshAgent.speed = this.baseSpeed * this.combatUnit.Multipliers.MovementSpeed;
+    }
+
+    /// <summary>
     /// Adds damage to the current unit.
     /// </summary>
     /// <param name="damage">The amount of damage recieved.</param>
@@ -292,6 +319,14 @@ public class UnitController : MonoBehaviour
     /// </summary>
     public void DeathAnimationEnd()
     {
+        // Only spawn if not the players team.
+        if ( this.TeamNumber != 1 )
+        {
+            Transform coinTransform = Instantiate( this.coinPrefab );
+            coinTransform.position = this.transform.position;
+            coinTransform.GetComponent<CoinController>().SetCoinValue( this.baseGold );
+        }
+
         Destroy( gameObject );
     }
 
@@ -304,7 +339,7 @@ public class UnitController : MonoBehaviour
         if ( this.performingAttackAgainst == this.unitAttackTarget )
         {
             // Get the target to take damage.
-            int damage = this.baseDamage; // Modifiers here.
+            int damage = Mathf.RoundToInt( this.baseDamage * this.combatUnit.Multipliers.AttackDamage );
             this.performingAttackAgainst.TakeDamage( damage );
         }
 

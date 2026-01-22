@@ -100,6 +100,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pickup"",
+                    ""type"": ""Button"",
+                    ""id"": ""512c7440-5bc3-4594-beeb-55de00abd8e0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -124,6 +133,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""ImproveUnitSpeed"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""48c476ae-c660-418e-acc3-f5f2dbf34191"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pickup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -133,6 +153,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_ImproveUnitSpeed = m_Player.FindAction("ImproveUnitSpeed", throwIfNotFound: true);
+        m_Player_Pickup = m_Player.FindAction("Pickup", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -214,6 +235,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_ImproveUnitSpeed;
+    private readonly InputAction m_Player_Pickup;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -229,6 +251,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/ImproveUnitSpeed".
         /// </summary>
         public InputAction @ImproveUnitSpeed => m_Wrapper.m_Player_ImproveUnitSpeed;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Pickup".
+        /// </summary>
+        public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -258,6 +284,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ImproveUnitSpeed.started += instance.OnImproveUnitSpeed;
             @ImproveUnitSpeed.performed += instance.OnImproveUnitSpeed;
             @ImproveUnitSpeed.canceled += instance.OnImproveUnitSpeed;
+            @Pickup.started += instance.OnPickup;
+            @Pickup.performed += instance.OnPickup;
+            @Pickup.canceled += instance.OnPickup;
         }
 
         /// <summary>
@@ -272,6 +301,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ImproveUnitSpeed.started -= instance.OnImproveUnitSpeed;
             @ImproveUnitSpeed.performed -= instance.OnImproveUnitSpeed;
             @ImproveUnitSpeed.canceled -= instance.OnImproveUnitSpeed;
+            @Pickup.started -= instance.OnPickup;
+            @Pickup.performed -= instance.OnPickup;
+            @Pickup.canceled -= instance.OnPickup;
         }
 
         /// <summary>
@@ -319,5 +351,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnImproveUnitSpeed(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pickup" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPickup(InputAction.CallbackContext context);
     }
 }

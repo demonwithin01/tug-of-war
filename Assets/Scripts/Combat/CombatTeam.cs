@@ -23,6 +23,11 @@ public class CombatTeam
     public Transform DefaultTarget { get; private set; }
 
     /// <summary>
+    /// Gets the multipliers that apply to the team.
+    /// </summary>
+    public CombatMultipliers Multipliers { get; private set; } = new();
+
+    /// <summary>
     /// Gets the Team Number.
     /// </summary>
     public int TeamNumber => this.teamNumber;
@@ -42,7 +47,7 @@ public class CombatTeam
     /// </summary>
     public void RegisterUnit( UnitController unit )
     {
-        CombatUnit combatUnit = new CombatUnit( unit );
+        CombatUnit combatUnit = new CombatUnit( unit, this.Multipliers );
 
         // Assume we haven't added this unit before.
         this.teamUnits.Add( combatUnit );

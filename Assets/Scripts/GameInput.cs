@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
@@ -10,15 +11,35 @@ public class GameInput : MonoBehaviour
     {
         Instance = this; 
 
-        playerInputActions = new PlayerInputActions();
+        this.playerInputActions = new PlayerInputActions();
 
-        playerInputActions.Player.Enable();
+        this.playerInputActions.Player.Enable();
 
-        playerInputActions.Player.ImproveUnitSpeed.performed += this.ImproveUnitSpeed_performed;
+        this.playerInputActions.Player.ImproveUnitSpeed.performed += this.ImproveUnitSpeed_performed;
+        this.playerInputActions.Player.Pickup.performed += this.Pickup_performed;
     }
 
     private void ImproveUnitSpeed_performed( UnityEngine.InputSystem.InputAction.CallbackContext obj )
     {
         TraitsManager.Instance.TEMP_IncreaseMoveSpeed();
     }
+
+    private void Pickup_performed( UnityEngine.InputSystem.InputAction.CallbackContext obj )
+    {
+        
+        Camera mainCamera = Camera.main;
+        Ray ray = mainCamera.ScreenPointToRay( Mouse.current.position.ReadValue() );
+
+        if ( Physics.Raycast( ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask( "Coin" ) ) ) // Refactor 7 to CONST...
+        {
+            CoinController coin = hit.transform.GetComponent<CoinController>();
+
+            if ( coin != null )
+            {
+                PlayerTreasury.Instance.CoinCollected( coin.Value );
+                Destroy( hit.transform.gameObject );
+            }
+        }
+    }
+
 }

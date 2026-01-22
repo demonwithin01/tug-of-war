@@ -11,9 +11,15 @@ public class CombatUnit
     private List<UnitController> enemiesWithinRange;
 
     /// <summary>
+    /// Gets the multipliers that apply to the team.
+    /// </summary>
+    public CombatMultipliers Multipliers { get; private set; }
+
+    /// <summary>
     /// The unit that is the focus for tracked enemies, etc.
     /// </summary>
     public UnitController Unit { get; private set; }
+
 
     /// <summary>
     /// The list of enemies that are within range of this unit.
@@ -23,10 +29,13 @@ public class CombatUnit
     /// </remarks>
     public IReadOnlyList<UnitController> EnemiesWithinRange => this.enemiesWithinRange;
 
-    public CombatUnit( UnitController unit )
+    public CombatUnit( UnitController unit, CombatMultipliers multipliers )
     {
         this.Unit = unit;
+        this.Multipliers = multipliers;
         this.enemiesWithinRange = new();
+
+        unit.InitialiseCombatUnit( this );
 
         FindNewAttackTarget();
     }

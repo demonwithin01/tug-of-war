@@ -9505,7 +9505,9 @@ MonoBehaviour:
   attackRange: 1
   baseAttackTime: 3
   baseDamage: 50
-  baseHealth: 100
+  baseHealth: 101
+  baseGold: 1
+  coinPrefab: {fileID: 1877613439245215364, guid: 348731dc6dedb2d42ac27068433e3c7e, type: 3}
 --- !u!1 &156456
 GameObject:
   m_ObjectHideFlags: 0
