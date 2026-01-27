@@ -266,6 +266,9 @@ public class UnitController : MonoBehaviour
                 colliders[ i ].enabled = false;
             }
 
+            this.navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+            this.navMeshAgent.radius = 0f;
+
             // Play the death animation.
             this.animator.Play( AnimationName.Death, layer: -1, normalizedTime: 0f );
 
