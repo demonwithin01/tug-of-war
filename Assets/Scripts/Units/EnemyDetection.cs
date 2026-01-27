@@ -85,22 +85,4 @@ public class EnemyDetection : MonoBehaviour
     {
         this.teamNumber = teamNumber;
     }
-
-    private bool IsAttackableUnit( Collider other, out AttackController attackController, out UnitHealth unitHealth )
-    {
-        if ( other.CompareTag( GameTags.Unit ) )
-        {
-            attackController = other.GetComponent<AttackController>();
-
-            if ( attackController != null && this.teamNumber != attackController.TeamNumber )
-            {
-                unitHealth = other.GetComponent<UnitHealth>();
-                return true;
-            }
-        }
-
-        attackController = null;
-        unitHealth = null;
-        return false;
-    }
 }
