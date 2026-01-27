@@ -32,8 +32,8 @@ public class UnitSpawner : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
         CombatManager.Instance.RegisterTeamTarget( this.TeamNumber, this.target );
+        this.spawnTimer = this.spawnTime;
     }
 
     // Update is called once per frame
