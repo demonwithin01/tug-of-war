@@ -1,8 +1,12 @@
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
+    [SerializeField]
+    private NavMeshAgent playerKing;
+
     public static GameInput Instance { get; private set; }
 
     private PlayerInputActions playerInputActions;
@@ -39,6 +43,10 @@ public class GameInput : MonoBehaviour
                 PlayerTreasury.Instance.CoinCollected( coin.Value );
                 Destroy( hit.transform.gameObject );
             }
+        }
+        else if ( Physics.Raycast( ray, out RaycastHit groundHit, Mathf.Infinity, LayerMask.GetMask( "Ground" ) ))
+        {
+            playerKing.SetDestination( groundHit.point );
         }
     }
 
