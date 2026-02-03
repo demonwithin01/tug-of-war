@@ -14,13 +14,9 @@ public class UnitSpawner : MonoBehaviour
     private Material unitMaterial;
 
     [SerializeField]
-    private Transform target;
-
-    [SerializeField]
     private float spawnTime = 10f;
 
-    [SerializeField]
-    private int TeamNumber = 1;
+    private TeamConfig teamConfig;
 
     [SerializeField]
     private bool canSpawnUnits = true;
@@ -29,10 +25,19 @@ public class UnitSpawner : MonoBehaviour
 
     private int spawnCount = 0;
 
+    private int TeamNumber => this.teamConfig.TeamNumber;
+
+    /// <summary>
+    /// Configures the spawner.
+    /// </summary>
+    private void Awake()
+    {
+        this.teamConfig = this.GetComponentInParent<TeamConfig>();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        CombatManager.Instance.RegisterTeamTarget( this.TeamNumber, this.target );
         this.spawnTimer = this.spawnTime;
     }
 

@@ -24,15 +24,14 @@ public class CombatManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Registers a team base location.
+    /// Registers a team within the Combat Manager.
     /// </summary>
-    /// <param name="teamNumber">The team number to register the location of.</param>
-    /// <param name="target">The target location.</param>
-    public void RegisterTeamTarget( int teamNumber, Transform target )
+    /// <param name="teamConfig">The team configuration details to register.</param>
+    public void RegisterTeam( TeamConfig teamConfig )
     {
-        CombatTeam combatTeam = FindTeam( teamNumber );
-
-        combatTeam.RegisterDefaultTarget( target );
+        CombatTeam combatTeam = FindTeam( teamConfig.TeamNumber );
+        
+        combatTeam.RegisterTeamBaseLocation( teamConfig.TeamBaseLocation );
     }
 
     /// <summary>
@@ -90,7 +89,7 @@ public class CombatManager : MonoBehaviour
         {
             if ( team.TeamNumber != currentTeamNumber )
             {
-                return team.DefaultTarget.position;
+                return team.TeamBaseLocation.position;
             }
         }
 

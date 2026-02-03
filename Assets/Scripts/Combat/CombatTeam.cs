@@ -18,9 +18,9 @@ public class CombatTeam
     private List<CombatUnit> teamUnits = new List<CombatUnit>();
 
     /// <summary>
-    /// Holds the default target that other teams should attack when there are no units within range.
+    /// Holds the team base location.
     /// </summary>
-    public Transform DefaultTarget { get; private set; }
+    public Transform TeamBaseLocation { get; private set; }
 
     /// <summary>
     /// Gets the multipliers that apply to the team.
@@ -37,9 +37,12 @@ public class CombatTeam
         this.teamNumber = teamNumber;
     }
 
-    public void RegisterDefaultTarget( Transform defaultTarget )
+    /// <summary>
+    /// Registers the team base location.
+    /// </summary>
+    public void RegisterTeamBaseLocation( Transform teamBaseLocation )
     {
-        this.DefaultTarget = defaultTarget;
+        this.TeamBaseLocation = teamBaseLocation;
     }
 
     /// <summary>

@@ -22,7 +22,7 @@ public class UnitController : MonoBehaviour
     }
 
     [SerializeField]
-    private float attackRange = 1f;
+    private float attackRange = 1.2f;
 
     [SerializeField]
     private float baseAttackTime = 3f;
