@@ -1,11 +1,10 @@
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
     [SerializeField]
-    private NavMeshAgent playerKing;
+    private PlayerKing playerKing;
 
     public static GameInput Instance { get; private set; }
 
