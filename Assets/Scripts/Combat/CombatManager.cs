@@ -16,7 +16,7 @@ public class CombatManager : MonoBehaviour
     /// <summary>
     /// Registers a newly spawned unit into the Combat Manager.
     /// </summary>
-    public void RegisterUnit( UnitController unit )
+    public void RegisterUnit( CreepUnitController unit )
     {
         CombatTeam team = FindTeamForUnit( unit );
 

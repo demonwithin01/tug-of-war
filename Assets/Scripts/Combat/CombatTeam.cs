@@ -48,7 +48,7 @@ public class CombatTeam
     /// <summary>
     /// Registers a unit within this team.
     /// </summary>
-    public void RegisterUnit( UnitController unit )
+    public void RegisterUnit( CreepUnitController unit )
     {
         CombatUnit combatUnit = new CombatUnit( unit, this.Multipliers );
 

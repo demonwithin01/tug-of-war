@@ -9467,7 +9467,8 @@ GameObject:
   - component: {fileID: 5447928952619599675}
   - component: {fileID: 3218089171380706058}
   - component: {fileID: 251133235567230784}
-  - component: {fileID: -6422805131232466101}
+  - component: {fileID: 6115646834564398907}
+  - component: {fileID: 5840941236913958970}
   m_Layer: 6
   m_Name: Swordsman
   m_TagString: Unit
@@ -9586,7 +9587,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-6422805131232466101
+--- !u!114 &6115646834564398907
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9595,16 +9596,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 155132}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8af8b32c373dd6e4a837758b23e0b5e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 69261c2e02ba6d8e3a00850cfd2775ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UnitController
+  m_EditorClassIdentifier: Assembly-CSharp::CreepUnitController
   attackRange: 1.5
   baseAttackTime: 3
   baseDamage: 50
-  baseHealth: 101
+  baseHealth: 100
   baseSpeed: 3.5
   baseGold: 1
   coinPrefab: {fileID: 1877613439245215364, guid: 348731dc6dedb2d42ac27068433e3c7e, type: 3}
+--- !u!114 &5840941236913958970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5df1c22b12c7237ab0c44fbf8155d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitAnimationController
 --- !u!1 &156456
 GameObject:
   m_ObjectHideFlags: 0

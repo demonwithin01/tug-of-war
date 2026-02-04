@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitController : MonoBehaviour
+[RequireComponent( typeof( UnitAnimationController ) )]
+public abstract class UnitController : MonoBehaviour
 {
     /// <summary>
     /// Animation state names.
@@ -25,16 +26,16 @@ public class UnitController : MonoBehaviour
     private float attackRange = 1.2f;
 
     [SerializeField]
-    private float baseAttackTime = 3f;
+    protected float baseAttackTime = 3f;
 
     [SerializeField]
-    private int baseDamage = 50;
+    protected int baseDamage = 50;
 
     [SerializeField]
     private int baseHealth = 100;
 
     [SerializeField]
-    private float baseSpeed = 3.5f;
+    protected float baseSpeed = 3.5f;
 
     [SerializeField]
     private int baseGold = 1;
@@ -43,18 +44,17 @@ public class UnitController : MonoBehaviour
     private Transform coinPrefab;
 
     // States
-    private bool isMoving = true;
     private bool isAttacking = false;
 
     // Heath
     private UnitHealth2 unitHealth;
 
     // Timers
-    private TimedAction attackTimer;
+    protected TimedAction attackTimer;
 
     // Unity components
-    private Animator animator;
-    private NavMeshAgent navMeshAgent;
+    private UnitAnimationController animationController;
+    protected NavMeshAgent navMeshAgent;
 
     /// <summary>
     /// The current unit that is being targeted.
@@ -67,11 +67,6 @@ public class UnitController : MonoBehaviour
     /// This is primarily used in case the animation frame ends when on another target.
     /// </remarks>
     private UnitController performingAttackAgainst;
-
-    /// <summary>
-    /// The combat unit that manages the team information.
-    /// </summary>
-    private CombatUnit combatUnit;
 
     /// <summary>
     /// Gets the team number that this unit is assigned to.
@@ -93,11 +88,13 @@ public class UnitController : MonoBehaviour
     /// </summary>
     public UnitController UnitAttackTarget => this.unitAttackTarget;
 
+    public abstract void AttackHits( UnitController target );
+
 
     private void Awake()
     {
         // Get the components that this controller will rely on.
-        this.animator = GetComponent<Animator>();
+        this.animationController = GetComponent<UnitAnimationController>();
         this.navMeshAgent = GetComponent<NavMeshAgent>();
 
         // Create the health management for this unit.
@@ -111,13 +108,6 @@ public class UnitController : MonoBehaviour
         // Create the attack timer.
         this.attackTimer = new TimedAction( this.baseAttackTime, PerformAttack );
         this.attackTimer.ResetToTrigger();
-    }
-
-    private void Start()
-    {
-        // Set the initial animation states.
-        this.animator.SetBool( AnimationState.IsRunning, isMoving );
-        this.animator.SetBool( AnimationState.IsAttacking, isAttacking );
     }
 
     private void Update()
@@ -173,8 +163,7 @@ public class UnitController : MonoBehaviour
                 isAttacking = true;
 
                 // Make sure the movement animation is not running.
-                this.isMoving = false;
-                this.animator.SetBool( AnimationState.IsRunning, isMoving );
+                this.animationController.StopRunning();
             }
         }
         else
@@ -187,11 +176,10 @@ public class UnitController : MonoBehaviour
     /// <summary>
     /// Triggers the attack animation.
     /// </summary>
-    private void PerformAttack()
+    protected void PerformAttack()
     {
         // Set the appropriate animations.
-        this.animator.SetBool( AnimationState.IsAttacking, true );
-        this.animator.Play( AnimationName.Attack, layer: -1, normalizedTime: 0f );
+        this.animationController.PerformAttack();
 
         this.performingAttackAgainst = this.unitAttackTarget;
     }
@@ -221,11 +209,7 @@ public class UnitController : MonoBehaviour
     /// </summary>
     private void ApplyMoveAnimation()
     {
-        this.isMoving = true;
-        this.isAttacking = false;
-
-        this.animator.SetBool( AnimationState.IsRunning, isMoving );
-        this.animator.SetBool( AnimationState.IsAttacking, isAttacking );
+        this.animationController.StartRunning();
     }
 
     /// <summary>
@@ -234,19 +218,6 @@ public class UnitController : MonoBehaviour
     public void InitialiseTeamNumber( int teamNumber  )
     {
         this.TeamNumber = teamNumber;
-    }
-
-    /// <summary>
-    /// Initialises the combat unit instance that maintains the unit's team.
-    /// </summary>
-    public void InitialiseCombatUnit( CombatUnit combatUnit )
-    {
-        this.combatUnit = combatUnit;
-
-        this.attackTimer = new TimedAction( this.baseAttackTime / this.combatUnit.Multipliers.AttackSpeed, PerformAttack );
-        this.attackTimer.ResetToTrigger();
-
-        this.navMeshAgent.speed = this.baseSpeed * this.combatUnit.Multipliers.MovementSpeed;
     }
 
     /// <summary>
@@ -270,7 +241,7 @@ public class UnitController : MonoBehaviour
             this.navMeshAgent.radius = 0f;
 
             // Play the death animation.
-            this.animator.Play( AnimationName.Death, layer: -1, normalizedTime: 0f );
+            this.animationController.PlayDeathAnimation();
 
             // Update the Combat Manager so that it can update other units.
             CombatManager.Instance.UnitDied( this );
@@ -341,9 +312,10 @@ public class UnitController : MonoBehaviour
         // Ensure that we are still attacking the same unit, just in case the unit is no longer the target when the animation ends.
         if ( this.performingAttackAgainst == this.unitAttackTarget )
         {
+            this.AttackHits( this.performingAttackAgainst );
             // Get the target to take damage.
-            int damage = Mathf.RoundToInt( this.baseDamage * this.combatUnit.Multipliers.AttackDamage );
-            this.performingAttackAgainst.TakeDamage( damage );
+            // int damage = Mathf.RoundToInt( this.baseDamage * this.combatUnit.Multipliers.AttackDamage );
+            // this.performingAttackAgainst.TakeDamage( damage );
         }
 
         // Remove the perform attack against value.

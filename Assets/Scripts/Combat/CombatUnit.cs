@@ -18,7 +18,7 @@ public class CombatUnit
     /// <summary>
     /// The unit that is the focus for tracked enemies, etc.
     /// </summary>
-    public UnitController Unit { get; private set; }
+    public CreepUnitController Unit { get; private set; }
 
 
     /// <summary>
@@ -29,7 +29,7 @@ public class CombatUnit
     /// </remarks>
     public IReadOnlyList<UnitController> EnemiesWithinRange => this.enemiesWithinRange;
 
-    public CombatUnit( UnitController unit, CombatMultipliers multipliers )
+    public CombatUnit( CreepUnitController unit, CombatMultipliers multipliers )
     {
         this.Unit = unit;
         this.Multipliers = multipliers;

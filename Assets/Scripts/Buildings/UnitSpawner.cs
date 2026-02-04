@@ -82,7 +82,7 @@ public class UnitSpawner : MonoBehaviour
         // Apply the colour for the unit, which will be based on the team.
         unit.GetComponentInChildren<UnitVisual>().ApplyUnitColour( this.unitMaterial );
 
-        UnitController unitController = unit.GetComponent<UnitController>();
+        CreepUnitController unitController = unit.GetComponent<CreepUnitController>();
         unitController.InitialiseTeamNumber( this.TeamNumber );
 
         // Set the initial unit position.
