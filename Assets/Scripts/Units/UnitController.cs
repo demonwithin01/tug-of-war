@@ -4,24 +4,6 @@ using UnityEngine.AI;
 [RequireComponent( typeof( UnitAnimationController ) )]
 public abstract class UnitController : MonoBehaviour
 {
-    /// <summary>
-    /// Animation state names.
-    /// </summary>
-    private static class AnimationState
-    {
-        public const string IsRunning = "IsRunning";
-        public const string IsAttacking = "IsAttacking";
-    }
-
-    /// <summary>
-    /// Animation names.
-    /// </summary>
-    private static class AnimationName
-    {
-        public const string Attack = "Attack";
-        public const string Death = "Death";
-    }
-
     [SerializeField]
     private float attackRange = 1.2f;
 
@@ -46,7 +28,7 @@ public abstract class UnitController : MonoBehaviour
     // States
     private bool isAttacking = false;
 
-    // Heath
+    // Health
     private UnitHealth2 unitHealth;
 
     // Timers

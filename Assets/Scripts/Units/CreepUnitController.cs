@@ -10,6 +10,7 @@ public class CreepUnitController : UnitController
 
     private void Start()
     {
+        // Creeper units should start moving immediately.
         this.GetComponent<UnitAnimationController>().StartRunning();
     }
 
