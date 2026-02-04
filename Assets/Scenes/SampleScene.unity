@@ -609,6 +609,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerKing
   destinationMarker: {fileID: 698704864}
+--- !u!136 &208644337
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208644332}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.75
+  m_Height: 2.7
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.95, z: 0}
 --- !u!1 &274628101
 GameObject:
   m_ObjectHideFlags: 0
@@ -3693,6 +3716,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 490451842819431914, guid: 00e918b4544b65ef5ac45501c17936c9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 208644334}
+    - targetCorrespondingSourceObject: {fileID: 490451842819431914, guid: 00e918b4544b65ef5ac45501c17936c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 208644337}
   m_SourcePrefab: {fileID: 100100000, guid: 00e918b4544b65ef5ac45501c17936c9, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

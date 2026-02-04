@@ -17,11 +17,13 @@ public class RandomUpgradeSelectorUI : MonoBehaviour
     private void Show()
     {
         gameObject.SetActive( true );
+        GameInput.Instance.DisableGameInput();
     }
 
     private void Hide()
     {
         gameObject.SetActive( false );
+        GameInput.Instance.EnableGameInput();
     }
 
     public void PanelSelected( UpgradePanelUI panel, UpgradeSO upgradeDetails )

@@ -10,4 +10,10 @@ public class CoinController : MonoBehaviour
     {
         this.value = value;
     }
+
+    public void Collected()
+    {
+        PlayerTreasury.Instance.CoinCollected( this.value );
+        Destroy( this.gameObject );
+    }
 }
