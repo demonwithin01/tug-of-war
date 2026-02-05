@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 [RequireComponent( typeof( UnitAnimationController ) )]
 public abstract class UnitController : MonoBehaviour
@@ -35,20 +37,28 @@ public abstract class UnitController : MonoBehaviour
     protected TimedAction attackTimer;
 
     // Unity components
-    private UnitAnimationController animationController;
     protected NavMeshAgent navMeshAgent;
 
+    // Other components
+    /// <summary>
+    /// The animation controller for this unit.
+    /// </summary>
+    private UnitAnimationController animationController;
+    /// <summary>
+    /// The enemy manager for this unit, which manages the units that are within range of this unit.
+    /// </summary>
+    private EnemyManager enemyManager;
     /// <summary>
     /// The current unit that is being targeted.
     /// </summary>
-    private UnitController unitAttackTarget;
+    private UnitController unitAttackTarget = null;
     /// <summary>
     /// The current unit that this unit is currently performing an attack against.
     /// </summary>
     /// <remarks>
     /// This is primarily used in case the animation frame ends when on another target.
     /// </remarks>
-    private UnitController performingAttackAgainst;
+    private UnitController performingAttackAgainst = null;
 
     /// <summary>
     /// Gets the team number that this unit is assigned to.
@@ -77,15 +87,14 @@ public abstract class UnitController : MonoBehaviour
     {
         // Get the components that this controller will rely on.
         this.animationController = GetComponent<UnitAnimationController>();
+        this.enemyManager = GetComponent<EnemyManager>();
         this.navMeshAgent = GetComponent<NavMeshAgent>();
 
         // Create the health management for this unit.
         this.unitHealth = new UnitHealth2( this.baseHealth );
 
-        // Register enemy attraction detection.
-        EnemyDetection enemyDetection = GetComponentInChildren<EnemyDetection>();
-        enemyDetection.EnemyDetected += this.EnemyDetection_EnemyDetected;
-        enemyDetection.EnemyLeft += this.EnemyDetection_EnemyLeft;
+        this.enemyManager.NewTargetAcquired += EnemyManager_NewTargetAcquired;
+        this.enemyManager.NoTargetsInRange += EnemyManager_NoTargetsInRange;
 
         // Create the attack timer.
         this.attackTimer = new TimedAction( this.baseAttackTime, PerformAttack );
@@ -110,22 +119,29 @@ public abstract class UnitController : MonoBehaviour
         this.attackTimer.Tick( isAttacking );
     }
 
-    /// <summary>
-    /// Handler for when something enters the 'attraction' zone.
-    /// </summary>
-    private void EnemyDetection_EnemyDetected( object sender, EnemyDetection.EnemyDetectionEventArgs e )
+    private void EnemyManager_NewTargetAcquired(object sender, UnitController e)
     {
-        // Update the combat manager.
-        CombatManager.Instance.UnitEntersRange( this, e.OpposingTeamUnit );
+        this.unitAttackTarget = e;
+        MoveToTarget( e.transform.position );
+
+        // If they are not within attack range...
+        if ( IsWithinAttackRange() == false )
+        {
+            // Then reset them to moving and not attacking.
+            ApplyMoveAnimation();
+        }
     }
 
-    /// <summary>
-    /// Handler for when something leaves the 'attraction' zone.
-    /// </summary>
-    private void EnemyDetection_EnemyLeft( object sender, EnemyDetection.EnemyDetectionEventArgs e )
+    private void EnemyManager_NoTargetsInRange(object sender, EventArgs e)
     {
-        // Update the combat manager.
-        CombatManager.Instance.UnitLeavesRange( this, e.OpposingTeamUnit );
+        // Remove the attack target.
+        this.unitAttackTarget = null;
+
+        // Tell the unit to go towards the new target.
+        MoveToTarget( CombatManager.Instance.FindOpposingTeamBase( this.TeamNumber ) );
+
+        // Ensure that the unit is in the moving animation.
+        ApplyMoveAnimation();
     }
 
     /// <summary>
@@ -200,6 +216,12 @@ public abstract class UnitController : MonoBehaviour
     public void InitialiseTeamNumber( int teamNumber  )
     {
         this.TeamNumber = teamNumber;
+
+        // Tell the unit to go towards the new target.
+        MoveToTarget( CombatManager.Instance.FindOpposingTeamBase( this.TeamNumber ) );
+
+        // Ensure that the unit is in the moving animation.
+        ApplyMoveAnimation();
     }
 
     /// <summary>
@@ -236,38 +258,6 @@ public abstract class UnitController : MonoBehaviour
     public float GetDistanceTo( UnitController target )
     {
         return Vector3.Distance( target.transform.position, this.transform.position );
-    }
-
-    /// <summary>
-    /// Assigns an enemy unit to attack.
-    /// </summary>
-    public void AssignAttackTargetUnit( UnitController opposingUnit )
-    {
-        this.unitAttackTarget = opposingUnit;
-        MoveToTarget( opposingUnit.transform.position );
-
-        // If they are not within attack range...
-        if ( IsWithinAttackRange() == false )
-        {
-            // Then reset them to moving and not attacking.
-            ApplyMoveAnimation();
-        }
-    }
-
-    /// <summary>
-    /// Removes the current attack target and redirect the unit towards another location.
-    /// </summary>
-    /// <param name="targetPosition">The new destination to send the unit to.</param>
-    public void RemoveAttackTargetUnit( Vector3 targetPosition )
-    {
-        // Remove the attack target.
-        this.unitAttackTarget = null;
-
-        // Tell the unit to go towards the new target.
-        MoveToTarget( targetPosition );
-
-        // Ensure that the unit is in the moving animation.
-        ApplyMoveAnimation();
     }
 
     /// <summary>

@@ -88,7 +88,10 @@ public class UnitSpawner : MonoBehaviour
         // Set the initial unit position.
         Vector3 opposingBaseLocation = CombatManager.Instance.FindOpposingTeamBase( this.TeamNumber );
         unit.transform.LookAt( opposingBaseLocation );
-        unit.GetComponent<NavMeshAgent>().Warp( this.spawnLocation.transform.position );
+
+        NavMeshAgent unitNavMeshAgent = unit.GetComponent<NavMeshAgent>();
+        unitNavMeshAgent.Warp( this.spawnLocation.transform.position );
+        unitNavMeshAgent.SetDestination( opposingBaseLocation );
 
         // Register the unit with the combat manager.
         CombatManager.Instance.RegisterUnit( unitController );

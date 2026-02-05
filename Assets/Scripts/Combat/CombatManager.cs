@@ -35,30 +35,6 @@ public class CombatManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Handle when a unit has entered the 'attraction' range of another unit.
-    /// </summary>
-    /// <param name="teamUnit">The unit that was attracted to another.</param>
-    /// <param name="opposingTeamUnit">The unit that was the attraction.</param>
-    public void UnitEntersRange( UnitController teamUnit, UnitController opposingTeamUnit )
-    {
-        CombatTeam team = FindTeamForUnit( teamUnit );
-
-        team.UnitEntersRange( teamUnit, opposingTeamUnit );
-    }
-
-    /// <summary>
-    /// Handle when a unit has left the 'attraction' range of another unit.
-    /// </summary>
-    /// <param name="teamUnit">The unit that was attracted to another.</param>
-    /// <param name="opposingTeamUnit">The unit that was the attraction.</param>
-    public void UnitLeavesRange( UnitController teamUnit, UnitController opposingTeamUnit )
-    {
-        CombatTeam team = FindTeamForUnit( teamUnit );
-
-        team.UnitLeavesRange( teamUnit, opposingTeamUnit );
-    }
-
-    /// <summary>
     /// Handle when a unit has died by removing it from the current team and stopping opposing teams from tracking it.
     /// </summary>
     public void UnitDied( UnitController unit )
@@ -72,10 +48,10 @@ public class CombatManager : MonoBehaviour
         // Remove the unit from tracking for opposing teams.
         foreach( CombatTeam opposingTeam in this.teams )
         {
-            if ( opposingTeam != team )
-            {
-                opposingTeam.OpposingTeamUnitDied( unit );
-            }
+            // if ( opposingTeam != team )
+            // {
+            //     opposingTeam.OpposingTeamUnitDied( unit );
+            // }
         }
     }
 
