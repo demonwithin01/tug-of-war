@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     private void EnemyDetection_EnemyDetected( object sender, EnemyDetection.EnemyDetectionEventArgs e )
     {
+         // If the unit is not already in the list of enemies within range, add it to the list and subscribe to its death event.
         if ( this.enemiesWithinRange.Contains( e.OpposingTeamUnit ) == false )
         {
             this.enemiesWithinRange.Add( e.OpposingTeamUnit );

@@ -248,20 +248,6 @@ public abstract class UnitController : MonoBehaviour
     }
 
     /// <summary>
-    /// Initialises the units team number.
-    /// </summary>
-    public void InitialiseTeamNumber( int teamNumber  )
-    {
-        this.TeamNumber = teamNumber;
-
-        // Tell the unit to go towards the new target.
-        MoveToTarget( TeamsManager.Instance.FindOpposingTeamBase( this.TeamNumber ) );
-
-        // Ensure that the unit is in the moving animation.
-        ApplyMoveAnimation();
-    }
-
-    /// <summary>
     /// Adds damage to the current unit.
     /// </summary>
     /// <param name="damage">The amount of damage recieved.</param>

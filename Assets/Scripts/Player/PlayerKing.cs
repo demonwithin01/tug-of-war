@@ -27,23 +27,6 @@ public class PlayerKing : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if ( other.CompareTag( "Coin" ) )
-        {
-            CoinController coin = other.transform.GetComponent<CoinController>();
-
-            if ( coin != null )
-            {
-                coin.Collected();
-            }
-            else
-            {
-                Debug.LogWarning( "PlayerKing collided with an object tagged as Coin, but it doesn't have a CoinController component." );
-            }
-        }
-    }
-
     public void SetDestination( Vector3 position )
     {
         this.navMeshAgent.SetDestination( position );
