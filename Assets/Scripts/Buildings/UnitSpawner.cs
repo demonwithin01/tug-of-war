@@ -16,24 +16,12 @@ public class UnitSpawner : MonoBehaviour
     [SerializeField]
     private float spawnTime = 10f;
 
-    private TeamConfig teamConfig;
-
     [SerializeField]
     private bool canSpawnUnits = true;
 
     private float spawnTimer = 0f;
 
     private int spawnCount = 0;
-
-    private int TeamNumber => this.teamConfig.TeamNumber;
-
-    /// <summary>
-    /// Configures the spawner.
-    /// </summary>
-    private void Awake()
-    {
-        this.teamConfig = this.GetComponentInParent<TeamConfig>();
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -69,8 +57,11 @@ public class UnitSpawner : MonoBehaviour
         // Record how many units were spawned. We'll use this for generating the name.
         this.spawnCount++;
 
+        // Register the new unit with the team controller that this spawner is a child of.
+        TeamController teamController = this.GetComponentInParent<TeamController>();
+
         // Set the team number based on the name.
-        if ( this.TeamNumber == 1 )
+        if ( teamController.TeamNumber == 1 )
         {
             unit.name = "Blue " + this.spawnCount;
         }
@@ -83,21 +74,16 @@ public class UnitSpawner : MonoBehaviour
         unit.GetComponentInChildren<UnitVisual>().ApplyUnitColour( this.unitMaterial );
 
         CreepUnitController unitController = unit.GetComponent<CreepUnitController>();
-        unitController.InitialiseTeamNumber( this.TeamNumber );
+        unitController.InitialiseWithTeamController( teamController );
+
+        teamController.RegisterUnit( unitController );
 
         // Set the initial unit position.
-        Vector3 opposingBaseLocation = CombatManager.Instance.FindOpposingTeamBase( this.TeamNumber );
+        Vector3 opposingBaseLocation = TeamsManager.Instance.FindOpposingTeamBase( teamController.TeamNumber );
         unit.transform.LookAt( opposingBaseLocation );
 
         NavMeshAgent unitNavMeshAgent = unit.GetComponent<NavMeshAgent>();
         unitNavMeshAgent.Warp( this.spawnLocation.transform.position );
         unitNavMeshAgent.SetDestination( opposingBaseLocation );
-
-        // Register the unit with the combat manager.
-        CombatManager.Instance.RegisterUnit( unitController );
-
-        // Make sure we initialise the enemy attraction detection.
-        EnemyDetection enemyDetection = unit.GetComponentInChildren<EnemyDetection>();
-        enemyDetection.Initialise( this.TeamNumber );
     }
 }

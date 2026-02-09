@@ -2,12 +2,6 @@ using UnityEngine;
 
 public class CreepUnitController : UnitController
 {
-
-    /// <summary>
-    /// The combat unit that manages the team information.
-    /// </summary>
-    private CombatUnit combatUnit;
-
     private void Start()
     {
         // Creeper units should start moving immediately.
@@ -17,14 +11,12 @@ public class CreepUnitController : UnitController
     /// <summary>
     /// Initialises the combat unit instance that maintains the unit's team.
     /// </summary>
-    public void InitialiseCombatUnit( CombatUnit combatUnit )
+    protected override void TeamInitialised()
     {
-        this.combatUnit = combatUnit;
-
-        this.attackTimer = new TimedAction( this.baseAttackTime / this.combatUnit.Multipliers.AttackSpeed, PerformAttack );
+        this.attackTimer = new TimedAction( this.baseAttackTime / base.TeamController.Multipliers.AttackSpeed, PerformAttack );
         this.attackTimer.ResetToTrigger();
 
-        this.navMeshAgent.speed = this.baseSpeed * this.combatUnit.Multipliers.MovementSpeed;
+        this.navMeshAgent.speed = this.baseSpeed * base.TeamController.Multipliers.MovementSpeed;
     }
 
     /// <summary>
@@ -33,7 +25,7 @@ public class CreepUnitController : UnitController
     public override void AttackHits( UnitController target )
     {
         // Get the target to take damage.
-        int damage = Mathf.RoundToInt( this.baseDamage * this.combatUnit.Multipliers.AttackDamage );
+        int damage = Mathf.RoundToInt( this.baseDamage * base.TeamController.Multipliers.AttackDamage );
         target.TakeDamage( damage );
     }
 }

@@ -30,6 +30,11 @@ public class EnemyManager : MonoBehaviour
         enemyDetection.EnemyLeft += this.EnemyDetection_EnemyLeft;
     }
 
+    private void OnDestroy()
+    {
+        this.enemiesWithinRange.Clear();
+    }
+
     /// <summary>
     /// Handler for when something enters the 'attraction' zone.
     /// </summary>
@@ -38,6 +43,8 @@ public class EnemyManager : MonoBehaviour
         if ( this.enemiesWithinRange.Contains( e.OpposingTeamUnit ) == false )
         {
             this.enemiesWithinRange.Add( e.OpposingTeamUnit );
+
+            e.OpposingTeamUnit.UnitDied += OpposingTeamUnit_UnitDied;
 
             if ( this.CurrentTarget == null )
             {
@@ -53,24 +60,15 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     private void EnemyDetection_EnemyLeft( object sender, EnemyDetection.EnemyDetectionEventArgs e )
     {
-        if ( this.enemiesWithinRange.Contains( e.OpposingTeamUnit ) )
-        {
-            this.enemiesWithinRange.Remove( e.OpposingTeamUnit );
+        this.RemoveTrackedEnemy( e.OpposingTeamUnit );
+    }
 
-            if ( this.CurrentTarget == e.OpposingTeamUnit )
-            {
-                this.CurrentTarget = FindGreatestThreatWithinRange();
-
-                if ( this.CurrentTarget != null )
-                {
-                    NewTargetAcquired?.Invoke(this, this.CurrentTarget);
-                }
-                else
-                {
-                    NoTargetsInRange?.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
+    /// <summary>
+    /// Handler for when a tracked enemy dies. This will remove the unit from the list of tracked enemies and update the current target if necessary.
+    /// </summary>
+    private void OpposingTeamUnit_UnitDied(object sender, UnitController e)
+    {
+        this.RemoveTrackedEnemy( e );
     }
 
     /// <summary>
@@ -80,13 +78,24 @@ public class EnemyManager : MonoBehaviour
     {
         UnitController closestTarget = null;
 
+        // If the object has been destroyed, do not find a new unit to attack.
+        if ( this == null || this.isActiveAndEnabled == false )
+        {
+            return null;
+        }
+
+        // If the object is dead, do not find a new unit to attack.
+        // if ( this.cop)
+
+        float? closestDistance = null;
+
+        this.enemiesWithinRange = this.enemiesWithinRange.FindAll( unit => unit != null && unit.isActiveAndEnabled && unit.IsAlive );
+
         // If there are no enemies within range, return null (no targets).
         if ( this.enemiesWithinRange.Count == 0 )
         {
             return null;
         }
-
-        float? closestDistance = null;
 
         // Otherwise find the closest target and return that.
         foreach( UnitController unit in this.enemiesWithinRange )
@@ -109,5 +118,31 @@ public class EnemyManager : MonoBehaviour
     private float GetDistanceTo( UnitController unit )
     {
         return Vector3.Distance( this.transform.position, unit.transform.position );
+    }
+
+    /// <summary>
+    /// Removes a tracked enemy from the list of enemies within range and updates the current target if necessary.
+    /// </summary>
+    private void RemoveTrackedEnemy( UnitController unit )
+    {
+        if ( this.enemiesWithinRange.Contains( unit ) )
+        {
+            this.enemiesWithinRange.Remove( unit );
+            unit.UnitDied -= OpposingTeamUnit_UnitDied;
+
+            if ( this.CurrentTarget == unit )
+            {
+                this.CurrentTarget = FindGreatestThreatWithinRange();
+
+                if ( this.CurrentTarget != null )
+                {
+                    NewTargetAcquired?.Invoke(this, this.CurrentTarget);
+                }
+                else
+                {
+                    NoTargetsInRange?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
     }
 }

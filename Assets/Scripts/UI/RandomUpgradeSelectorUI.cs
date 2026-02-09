@@ -28,7 +28,7 @@ public class RandomUpgradeSelectorUI : MonoBehaviour
 
     public void PanelSelected( UpgradePanelUI panel, UpgradeSO upgradeDetails )
     {
-        CombatTeam playerTeam = CombatManager.Instance.FindPlayerTeam();
+        TeamController playerTeam = TeamsManager.Instance.FindPlayerTeam();
 
         playerTeam.Multipliers.IncreaseAttackDamageMultiplier( upgradeDetails.attackDamageModifier );
         playerTeam.Multipliers.IncreaseAttackSpeedMultiplier( upgradeDetails.attackSpeedModifier );

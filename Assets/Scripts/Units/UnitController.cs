@@ -6,6 +6,8 @@ using UnityEngine.UIElements;
 [RequireComponent( typeof( UnitAnimationController ) )]
 public abstract class UnitController : MonoBehaviour
 {
+    public event EventHandler<UnitController> UnitDied;
+
     [SerializeField]
     private float attackRange = 1.2f;
 
@@ -59,6 +61,11 @@ public abstract class UnitController : MonoBehaviour
     /// This is primarily used in case the animation frame ends when on another target.
     /// </remarks>
     private UnitController performingAttackAgainst = null;
+
+    /// <summary>
+    /// The team controller that this unit belongs to.
+    /// </summary>
+    public TeamController TeamController { get; private set; }
 
     /// <summary>
     /// Gets the team number that this unit is assigned to.
@@ -138,7 +145,7 @@ public abstract class UnitController : MonoBehaviour
         this.unitAttackTarget = null;
 
         // Tell the unit to go towards the new target.
-        MoveToTarget( CombatManager.Instance.FindOpposingTeamBase( this.TeamNumber ) );
+        MoveToTarget( TeamsManager.Instance.FindOpposingTeamBase( this.TeamNumber ) );
 
         // Ensure that the unit is in the moving animation.
         ApplyMoveAnimation();
@@ -182,6 +189,8 @@ public abstract class UnitController : MonoBehaviour
         this.performingAttackAgainst = this.unitAttackTarget;
     }
 
+    protected abstract void TeamInitialised();
+
     /// <summary>
     /// Checks whether the unit is within attack range of its target.
     /// </summary>
@@ -197,9 +206,22 @@ public abstract class UnitController : MonoBehaviour
     /// </summary>
     private void MoveToTarget( Vector3 targetPosition )
     {
-        // Ensure that the nav mesh agent is running.
-        this.navMeshAgent.isStopped = false;
-        this.navMeshAgent.SetDestination( targetPosition );
+        if ( this == null || this.navMeshAgent.enabled == false ||this.isActiveAndEnabled == false )
+        {
+            return;
+        }
+
+        try
+        {
+            // Ensure that the nav mesh agent is running.
+            this.navMeshAgent.isStopped = false;
+            this.navMeshAgent.SetDestination( targetPosition );
+        }
+        catch( Exception ex )
+        {
+            Debug.LogError( $"Error acquiring new target: {ex}" );
+            return;
+        }
     }
 
     /// <summary>
@@ -211,6 +233,21 @@ public abstract class UnitController : MonoBehaviour
     }
 
     /// <summary>
+    /// Initialises the unit controller with the team controller that it belongs to.
+    /// </summary>
+    public void InitialiseWithTeamController( TeamController teamController )
+    {
+        this.TeamController = teamController;
+        this.TeamNumber = teamController.TeamNumber;
+
+        // Make sure we initialise the enemy attraction detection.
+        EnemyDetection enemyDetection = this.GetComponentInChildren<EnemyDetection>();
+        enemyDetection.Initialise( this.TeamNumber );
+
+        this.TeamInitialised();
+    }
+
+    /// <summary>
     /// Initialises the units team number.
     /// </summary>
     public void InitialiseTeamNumber( int teamNumber  )
@@ -218,7 +255,7 @@ public abstract class UnitController : MonoBehaviour
         this.TeamNumber = teamNumber;
 
         // Tell the unit to go towards the new target.
-        MoveToTarget( CombatManager.Instance.FindOpposingTeamBase( this.TeamNumber ) );
+        MoveToTarget( TeamsManager.Instance.FindOpposingTeamBase( this.TeamNumber ) );
 
         // Ensure that the unit is in the moving animation.
         ApplyMoveAnimation();
@@ -243,12 +280,16 @@ public abstract class UnitController : MonoBehaviour
 
             this.navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
             this.navMeshAgent.radius = 0f;
+            this.navMeshAgent.isStopped = true;
+            this.navMeshAgent.enabled = false;
+
+            this.enemyManager.enabled = false;
 
             // Play the death animation.
             this.animationController.PlayDeathAnimation();
 
-            // Update the Combat Manager so that it can update other units.
-            CombatManager.Instance.UnitDied( this );
+            // Raise an event so that other units can respond to this unit's death.
+            this.UnitDied?.Invoke( this, this );
         }
     }
 
@@ -284,8 +325,8 @@ public abstract class UnitController : MonoBehaviour
         // Ensure that we are still attacking the same unit, just in case the unit is no longer the target when the animation ends.
         if ( this.performingAttackAgainst == this.unitAttackTarget )
         {
-            this.AttackHits( this.performingAttackAgainst );
             // Get the target to take damage.
+            this.AttackHits( this.performingAttackAgainst );
             // int damage = Mathf.RoundToInt( this.baseDamage * this.combatUnit.Multipliers.AttackDamage );
             // this.performingAttackAgainst.TakeDamage( damage );
         }
