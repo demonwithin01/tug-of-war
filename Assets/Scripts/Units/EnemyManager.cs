@@ -50,9 +50,7 @@ public class EnemyManager : MonoBehaviour
 
             if ( this.CurrentTarget == null )
             {
-                this.CurrentTarget = e.OpposingTeamUnit;
-
-                NewTargetAcquired?.Invoke(this, this.CurrentTarget);
+                this.ApplyTarget( e.OpposingTeamUnit );
             }
         }
     }
@@ -71,6 +69,16 @@ public class EnemyManager : MonoBehaviour
     private void OpposingTeamUnit_UnitDied(object sender, UnitController e)
     {
         this.RemoveTrackedEnemy( e );
+    }
+
+    /// <summary>
+    /// Applies the specified unit as the current target and raises the NewTargetAcquired event.
+    /// </summary>
+    private void ApplyTarget( UnitController unitController )
+    {
+        this.CurrentTarget = unitController;
+
+        NewTargetAcquired?.Invoke(this, unitController);
     }
 
     /// <summary>
@@ -146,5 +154,23 @@ public class EnemyManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void FindTarget()
+    {
+        if ( this.CurrentTarget == null )
+        {
+            UnitController newTarget = FindGreatestThreatWithinRange();
+
+            if ( newTarget != null )
+            {
+                this.ApplyTarget( newTarget );
+            }
+        }
+    }
+
+    public void ClearCurrentTarget()
+    {
+        this.CurrentTarget = null;
     }
 }

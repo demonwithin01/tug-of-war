@@ -3,10 +3,12 @@ using UnityEngine;
 public class UnitAnimationController : MonoBehaviour
 {
     // States
-    private bool isMoving = true;
+    private bool isMoving = false;
 
     // Unity components
     private Animator animator;
+
+    public bool IsMoving => this.isMoving;
 
     /// <summary>
     /// Animation state names.
@@ -44,9 +46,9 @@ public class UnitAnimationController : MonoBehaviour
     {
         this.isMoving = true;
 
-        this.animator.SetBool( AnimationState.IsRunning, true );
-
         this.StopAttacking();
+
+        this.animator.SetBool( AnimationState.IsRunning, true );
     }
 
     public void StopRunning()

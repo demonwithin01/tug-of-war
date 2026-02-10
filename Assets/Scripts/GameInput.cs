@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class GameInput : MonoBehaviour
 {
     [SerializeField]
-    private PlayerKing playerKing;
+    private PlayerUnitController playerKing;
 
     public static GameInput Instance { get; private set; }
 

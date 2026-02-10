@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
@@ -45,11 +46,11 @@ public abstract class UnitController : MonoBehaviour
     /// <summary>
     /// The animation controller for this unit.
     /// </summary>
-    private UnitAnimationController animationController;
+    protected UnitAnimationController animationController;
     /// <summary>
     /// The enemy manager for this unit, which manages the units that are within range of this unit.
     /// </summary>
-    private EnemyManager enemyManager;
+    protected EnemyManager enemyManager;
     /// <summary>
     /// The current unit that is being targeted.
     /// </summary>
@@ -106,6 +107,8 @@ public abstract class UnitController : MonoBehaviour
         // Create the attack timer.
         this.attackTimer = new TimedAction( this.baseAttackTime, PerformAttack );
         this.attackTimer.ResetToTrigger();
+
+        this.OnAwake();
     }
 
     private void Update()
@@ -115,6 +118,13 @@ public abstract class UnitController : MonoBehaviour
         {
             return;
         }
+
+        if ( this.animationController.IsMoving && this.navMeshAgent.remainingDistance <= this.navMeshAgent.stoppingDistance )
+        {
+            this.animationController.StopRunning();
+        }
+
+        this.OnUpdate();
 
         if ( this.unitAttackTarget != null )
         {
@@ -126,30 +136,19 @@ public abstract class UnitController : MonoBehaviour
         this.attackTimer.Tick( isAttacking );
     }
 
-    private void EnemyManager_NewTargetAcquired(object sender, UnitController e)
+    protected virtual void OnAwake()
     {
-        this.unitAttackTarget = e;
-        MoveToTarget( e.transform.position );
-
-        // If they are not within attack range...
-        if ( IsWithinAttackRange() == false )
-        {
-            // Then reset them to moving and not attacking.
-            ApplyMoveAnimation();
-        }
+        
     }
 
-    private void EnemyManager_NoTargetsInRange(object sender, EventArgs e)
+    protected virtual void OnUpdate()
     {
-        // Remove the attack target.
-        this.unitAttackTarget = null;
-
-        // Tell the unit to go towards the new target.
-        MoveToTarget( TeamsManager.Instance.FindOpposingTeamBase( this.TeamNumber ) );
-
-        // Ensure that the unit is in the moving animation.
-        ApplyMoveAnimation();
+        
     }
+
+    protected abstract void EnemyManager_NewTargetAcquired(object sender, UnitController e);
+
+    protected abstract void EnemyManager_NoTargetsInRange(object sender, EventArgs e);
 
     /// <summary>
     /// Handles when there is an attack target.
@@ -189,6 +188,35 @@ public abstract class UnitController : MonoBehaviour
         this.performingAttackAgainst = this.unitAttackTarget;
     }
 
+    protected void AttackTarget( UnitController target )
+    {
+        this.unitAttackTarget = target;
+        MoveToTarget( target.transform.position );
+
+        // If they are not within attack range...
+        if ( IsWithinAttackRange() == false )
+        {
+            // Then reset them to moving and not attacking.
+            ApplyMoveAnimation();
+        }
+    }
+
+    protected void RemoveAttackTarget( Vector3 moveToPosition )
+    {
+        // Remove the attack target.
+        this.unitAttackTarget = null;
+        this.isAttacking = false;
+
+        // Tell the unit to go towards the new target.
+        MoveToTarget( moveToPosition );
+
+        // Ensure that the unit is in the moving animation.
+        ApplyMoveAnimation();
+    }
+
+    /// <summary>
+    /// Raised when the team controller has been assigned to this unit, allowing the unit to perform any initialisation that relies on the team controller being assigned.
+    /// </summary>
     protected abstract void TeamInitialised();
 
     /// <summary>
@@ -270,6 +298,8 @@ public abstract class UnitController : MonoBehaviour
             this.navMeshAgent.enabled = false;
 
             this.enemyManager.enabled = false;
+
+            this.GetComponent<Rigidbody>().useGravity = false;
 
             // Play the death animation.
             this.animationController.PlayDeathAnimation();

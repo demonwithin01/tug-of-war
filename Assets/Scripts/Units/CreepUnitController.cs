@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CreepUnitController : UnitController
@@ -6,6 +7,16 @@ public class CreepUnitController : UnitController
     {
         // Creeper units should start moving immediately.
         this.GetComponent<UnitAnimationController>().StartRunning();
+    }
+
+    protected override void EnemyManager_NewTargetAcquired(object sender, UnitController e)
+    {
+        base.AttackTarget( e );
+    }
+
+    protected override void EnemyManager_NoTargetsInRange(object sender, EventArgs e)
+    {
+        base.RemoveAttackTarget( TeamsManager.Instance.FindOpposingTeamBase( this.TeamNumber ) );
     }
 
     /// <summary>
