@@ -27,9 +27,6 @@ public abstract class UnitController : MonoBehaviour
     [SerializeField]
     private int baseGold = 1;
 
-    [SerializeField]
-    private Transform coinPrefab;
-
     // States
     private bool isAttacking = false;
 
@@ -325,9 +322,7 @@ public abstract class UnitController : MonoBehaviour
         // Only spawn if not the players team.
         if ( this.TeamNumber != 1 )
         {
-            Transform coinTransform = Instantiate( this.coinPrefab );
-            coinTransform.position = this.transform.position;
-            coinTransform.GetComponent<CoinController>().SetCoinValue( this.baseGold );
+            PlayerTreasury.Instance.SpawnCoin( new Vector3( this.transform.position.x, 0f, this.transform.position.z ), this.baseGold );
         }
 
         Destroy( gameObject );

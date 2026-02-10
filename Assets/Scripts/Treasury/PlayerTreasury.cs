@@ -12,6 +12,9 @@ public class PlayerTreasury : MonoBehaviour
     [SerializeField]
     private int purchaseAmount = 10;
 
+    [SerializeField]
+    private Transform coinPrefab;
+
     private int coins = 0;
 
     private void Awake()
@@ -36,5 +39,11 @@ public class PlayerTreasury : MonoBehaviour
         this.coins -= this.purchaseAmount;
 
         this.OnTreasuryChange?.Invoke( this, new TreasuryChangedArgs( -this.purchaseAmount, this.coins ) );
+    }
+
+    public void SpawnCoin( Vector3 position, int coinWorth )
+    {
+        Transform coinTransform = Instantiate( this.coinPrefab, position, Quaternion.identity );
+        coinTransform.GetComponent<CoinController>().SetCoinValue( coinWorth );
     }
 }
