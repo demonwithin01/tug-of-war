@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Manages health for a unit.
 /// </summary>
-public class UnitHealth2
+public class UnitHealth
 {
     /// <summary>
     /// Gets the units health.
@@ -16,7 +16,7 @@ public class UnitHealth2
     /// </remarks>
     public bool IsAlive { get; private set; }
 
-    public UnitHealth2( int maxHealth )
+    public UnitHealth( int maxHealth )
     {
         this.CurrentHealth = maxHealth;
         this.IsAlive = true;

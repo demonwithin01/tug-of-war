@@ -31,23 +31,23 @@ public abstract class UnitController : MonoBehaviour
     private bool isAttacking = false;
 
     // Health
-    private UnitHealth2 unitHealth;
+    private UnitHealth unitHealth;
 
     // Timers
-    protected TimedAction attackTimer;
+    private TimedAction attackTimer;
 
     // Unity components
-    protected NavMeshAgent navMeshAgent;
+    private NavMeshAgent navMeshAgent;
 
     // Other components
     /// <summary>
     /// The animation controller for this unit.
     /// </summary>
-    protected UnitAnimationController animationController;
+    private UnitAnimationController animationController;
     /// <summary>
     /// The enemy manager for this unit, which manages the units that are within range of this unit.
     /// </summary>
-    protected EnemyManager enemyManager;
+    private EnemyManager enemyManager;
     /// <summary>
     /// The current unit that is being targeted.
     /// </summary>
@@ -85,6 +85,26 @@ public abstract class UnitController : MonoBehaviour
     /// </summary>
     public UnitController UnitAttackTarget => this.unitAttackTarget;
 
+    /// <summary>
+    /// Gets the NavMeshAgent component for this unit.
+    /// </summary>
+    protected NavMeshAgent NavMeshAgent => this.navMeshAgent;
+
+    /// <summary>
+    /// Gets the animation controller for this unit.
+    /// </summary>
+    protected UnitAnimationController AnimationController => this.animationController;
+
+    /// <summary>
+    /// Gets the enemy manager for this unit, which manages the units that are within range of this unit.
+    /// </summary>
+    protected EnemyManager EnemyManager => this.enemyManager;
+
+    /// <summary>
+    /// Gets the attack timer.
+    /// </summary>
+    protected TimedAction AttackTimer { get; set; }
+
     public abstract void AttackHits( UnitController target );
 
 
@@ -96,7 +116,7 @@ public abstract class UnitController : MonoBehaviour
         this.navMeshAgent = GetComponent<NavMeshAgent>();
 
         // Create the health management for this unit.
-        this.unitHealth = new UnitHealth2( this.baseHealth );
+        this.unitHealth = new UnitHealth( this.baseHealth );
 
         this.enemyManager.NewTargetAcquired += EnemyManager_NewTargetAcquired;
         this.enemyManager.NoTargetsInRange += EnemyManager_NoTargetsInRange;

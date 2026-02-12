@@ -24,10 +24,10 @@ public class CreepUnitController : UnitController
     /// </summary>
     protected override void TeamInitialised()
     {
-        this.attackTimer = new TimedAction( this.baseAttackTime / base.TeamController.Multipliers.AttackSpeed, PerformAttack );
-        this.attackTimer.ResetToTrigger();
+        this.AttackTimer = new TimedAction( this.baseAttackTime / base.TeamController.Multipliers.AttackSpeed, PerformAttack );
+        this.AttackTimer.ResetToTrigger();
 
-        this.navMeshAgent.speed = this.baseSpeed * base.TeamController.Multipliers.MovementSpeed;
+        this.NavMeshAgent.speed = this.baseSpeed * base.TeamController.Multipliers.MovementSpeed;
     }
 
     /// <summary>

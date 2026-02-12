@@ -19,10 +19,10 @@ public class PlayerUnitController : UnitController
 
     protected override void OnUpdate()
     {
-        if ( this.userIntendedDestination.HasValue && this.navMeshAgent.remainingDistance <= this.navMeshAgent.stoppingDistance )
+        if ( this.userIntendedDestination.HasValue && this.NavMeshAgent.remainingDistance <= this.NavMeshAgent.stoppingDistance )
         {
             this.userIntendedDestination = null;
-            base.enemyManager.FindTarget();
+            base.EnemyManager.FindTarget();
         }
     }
 
@@ -36,7 +36,7 @@ public class PlayerUnitController : UnitController
         // Do not attempt to attack a target if the player has explicitly set a destination for the unit to go to.
         if ( this.userIntendedDestination.HasValue )
         {
-            base.enemyManager.ClearCurrentTarget();
+            base.EnemyManager.ClearCurrentTarget();
             return;
         }
 

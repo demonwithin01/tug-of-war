@@ -23,8 +23,17 @@ public class CoinController : MonoBehaviour
 
     public void Collected()
     {
+        if ( this.isCollected )
+        {
+            return;
+        }
+
+        this.isCollected = true;
+
         PlayerTreasury.Instance.CoinCollected( this.value );
+
         this.audioSource.Play();
+        
         GetComponentInChildren<MeshRenderer>().enabled = false; // Hide the coin visually
         StartCoroutine(WaitForAudioEnd());
     }
