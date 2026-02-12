@@ -1,3 +1,8 @@
-Pickup_Gold_04.wav -> https://freesound.org/people/LittleRobotSoundFactory/
-https://freesound.org/people/LittleRobotSoundFactory/sounds/270410/
+Pickup_Gold_04.wav -> https://freesound.org/people/LittleRobotSoundFactory/sounds/270410/
+270410__littlerobotsoundfactory__pickup_gold_04
 
+VICTORY CRY REVERB 2.wav -> https://freesound.org/people/chripei/sounds/165491/
+165491__chripei__victory-cry-reverb-2.wav
+
+Victory Percussion Music Cue -> https://freesound.org/people/joshuaempyre/sounds/404024/
+404024__joshuaempyre__victory-percussion-music-cue.wav

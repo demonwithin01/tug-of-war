@@ -1,7 +1,11 @@
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class VictoryLocation : MonoBehaviour
 {
+    public event EventHandler OnVictoryReached;
+
     [SerializeField]
     private int teamNumber;
 
@@ -10,6 +14,7 @@ public class VictoryLocation : MonoBehaviour
         UnitController unitController = other.GetComponent<UnitController>();
         if ( unitController != null && unitController.TeamNumber != teamNumber )
         {
+            OnVictoryReached?.Invoke( this, EventArgs.Empty );
             Debug.Log( "Congratulations, you win!" );
         }
     }
