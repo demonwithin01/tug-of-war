@@ -1,15 +1,19 @@
+using System;
 using UnityEngine;
 
 public class RandomUpgradeSelectorUI : MonoBehaviour
 {
+    [SerializeField]
+    private ShopEntranceController shopEntranceController;
+
     private void Start()
     {
         Hide();
 
-        PlayerTreasury.Instance.OnPurchaseAmountReached += this.PlayerTreasury_OnPurchaseAmountReached;
+        this.shopEntranceController.OnPlayerEnteredShop += ShopEntranceController_OnPlayerEnteredShop;
     }
 
-    private void PlayerTreasury_OnPurchaseAmountReached( object sender, PurchaseAmountReachedArgs e )
+    private void ShopEntranceController_OnPlayerEnteredShop(object sender, EventArgs e)
     {
         Show();
     }
