@@ -720,7 +720,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5de7968cf3bf8c44be5b739b077b125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameInput
-  playerKing: {fileID: 593817805}
 --- !u!4 &274628103
 Transform:
   m_ObjectHideFlags: 0
@@ -1438,17 +1437,6 @@ CapsuleCollider:
   m_Height: 2.7
   m_Direction: 2
   m_Center: {x: 0, y: 0.95, z: 0}
---- !u!114 &593817805 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8522823208183658213, guid: 00e918b4544b65ef5ac45501c17936c9, type: 3}
-  m_PrefabInstance: {fileID: 6652394827088410381}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593817794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b157954a5fc794ba6718b5bbbb4da9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerUnitController
 --- !u!1001 &604021666
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3468,7 +3456,7 @@ Transform:
   m_GameObject: {fileID: 1841757780}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.68237, y: 0, z: 1.77627}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

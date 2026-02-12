@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
-    [SerializeField]
-    private PlayerUnitController playerKing;
+    public event EventHandler<Vector3> PlayerMovedRequested;
+
 
     public static GameInput Instance { get; private set; }
 
@@ -28,7 +29,7 @@ public class GameInput : MonoBehaviour
 
         if ( Physics.Raycast( ray, out RaycastHit groundHit, Mathf.Infinity, LayerMask.GetMask( "Ground" ) ))
         {
-            playerKing.SetDestination( groundHit.point );
+            this.PlayerMovedRequested?.Invoke( this, new Vector3( groundHit.point.x, 0f, groundHit.point.z ) );
         }
     }
 

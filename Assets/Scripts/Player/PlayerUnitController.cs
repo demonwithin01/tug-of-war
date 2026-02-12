@@ -15,6 +15,8 @@ public class PlayerUnitController : UnitController
     {
         TeamController playerTeam = TeamsManager.Instance.FindPlayerTeam();
         this.InitialiseWithTeamController( playerTeam );
+
+        GameInput.Instance.PlayerMovedRequested += this.GameInput_PlayerMovedRequested;
     }
 
     protected override void OnUpdate()
@@ -52,6 +54,11 @@ public class PlayerUnitController : UnitController
     {
         Vector3 targetPosition = this.lastStandingPosition ?? this.userIntendedDestination ?? this.transform.position;
         base.RemoveAttackTarget( targetPosition );
+    }
+
+    private void GameInput_PlayerMovedRequested(object sender, Vector3 e)
+    {
+        this.SetDestination( e );
     }
 
     public override void AttackHits(UnitController target)
