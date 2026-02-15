@@ -15,4 +15,4 @@ MonoBehaviour:
   upgradeName: Increase Movement Speed
   attackSpeedModifier: 0
   attackDamageModifier: 0
-  movementSpeedModifier: 3
+  movementSpeedModifier: 0.1

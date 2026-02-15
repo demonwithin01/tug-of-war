@@ -1,12 +1,36 @@
-﻿/// <summary>
+﻿using System;
+
+
+/// <summary>
 /// Manages health for a unit.
 /// </summary>
 public class UnitHealth
 {
+    public class HealthChangedEventArgs : EventArgs
+    {
+        public UnitController Unit { get; }
+        public float NewHealth { get; }
+
+        public HealthChangedEventArgs( UnitController unit, float newHealth )
+        {
+            this.Unit = unit;
+            this.NewHealth = newHealth;
+        }
+    }
+    
+    public event EventHandler<HealthChangedEventArgs> HealthChanged;
+
+    private UnitController unitController;
+
     /// <summary>
     /// Gets the units health.
     /// </summary>
     public int CurrentHealth { get; private set; }
+
+    /// <summary>
+    /// Gets the maximum health for this unit.
+    /// </summary>
+    public int MaxHealth { get; private set; }
 
     /// <summary>
     /// Gets whether the unit is currently alive.
@@ -16,9 +40,11 @@ public class UnitHealth
     /// </remarks>
     public bool IsAlive { get; private set; }
 
-    public UnitHealth( int maxHealth )
+    public UnitHealth( UnitController unit, int maxHealth )
     {
+        this.unitController = unit;
         this.CurrentHealth = maxHealth;
+        this.MaxHealth = maxHealth;
         this.IsAlive = true;
     }
 
@@ -34,6 +60,9 @@ public class UnitHealth
         {
             // Remove the damage from the health.
             this.CurrentHealth -= damage;
+
+            // Trigger the health changed event.
+            HealthChanged?.Invoke(this, new HealthChangedEventArgs(this.unitController, this.CurrentHealth));
 
             // If the health is less than or equal to zero...
             if ( this.CurrentHealth <= 0 )

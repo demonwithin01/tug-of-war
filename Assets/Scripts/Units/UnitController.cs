@@ -78,7 +78,7 @@ public abstract class UnitController : MonoBehaviour
     /// <summary>
     /// Gets the current health.
     /// </summary>
-    public int Health => this.unitHealth.CurrentHealth;
+    public UnitHealth Health => this.unitHealth;
 
     /// <summary>
     /// Gets the current enemy that this unit is targeting.
@@ -116,7 +116,7 @@ public abstract class UnitController : MonoBehaviour
         this.navMeshAgent = GetComponent<NavMeshAgent>();
 
         // Create the health management for this unit.
-        this.unitHealth = new UnitHealth( this.baseHealth );
+        this.unitHealth = new UnitHealth( this, this.baseHealth );
 
         this.enemyManager.NewTargetAcquired += EnemyManager_NewTargetAcquired;
         this.enemyManager.NoTargetsInRange += EnemyManager_NoTargetsInRange;

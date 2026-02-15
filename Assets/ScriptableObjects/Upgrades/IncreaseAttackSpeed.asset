@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: IncreaseAttackSpeed
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeSO
   upgradeName: Increase Attack Speed
-  attackSpeedModifier: 2
+  attackSpeedModifier: 0.1
   attackDamageModifier: 0
   movementSpeedModifier: 0

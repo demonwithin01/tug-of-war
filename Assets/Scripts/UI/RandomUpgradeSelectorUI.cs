@@ -24,7 +24,7 @@ public class RandomUpgradeSelectorUI : MonoBehaviour
         GameInput.Instance.DisableGameInput();
     }
 
-    private void Hide()
+    public void Hide()
     {
         gameObject.SetActive( false );
         GameInput.Instance.EnableGameInput();
