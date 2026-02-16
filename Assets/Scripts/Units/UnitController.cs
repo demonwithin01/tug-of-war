@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public abstract class UnitController : MonoBehaviour
 {
     public event EventHandler<UnitController> UnitDied;
+    public event EventHandler<UnitController> OnPerformAttack;
 
     [SerializeField]
     private float attackRange = 1.2f;
@@ -203,6 +204,8 @@ public abstract class UnitController : MonoBehaviour
         this.animationController.PerformAttack();
 
         this.performingAttackAgainst = this.unitAttackTarget;
+
+        this.OnPerformAttack?.Invoke( this, this.performingAttackAgainst );
     }
 
     protected void AttackTarget( UnitController target )

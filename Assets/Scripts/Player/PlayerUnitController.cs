@@ -3,10 +3,16 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [DefaultExecutionOrder(100)] 
+[RequireComponent( typeof( AudioSource ) )]
 public class PlayerUnitController : UnitController
 {
     [SerializeField]
     private PlayerDestinationMarker destinationMarker;
+
+    [SerializeField]
+    private AudioClip onMoveAudioClip;
+
+    private AudioSource audioSource;
 
     private Vector3? lastStandingPosition = null;
     private Vector3? userIntendedDestination = null;
@@ -17,6 +23,11 @@ public class PlayerUnitController : UnitController
         this.InitialiseWithTeamController( playerTeam );
 
         GameInput.Instance.PlayerMovedRequested += this.GameInput_PlayerMovedRequested;
+    }
+
+    protected override void OnAwake()
+    {
+        this.audioSource = GetComponent<AudioSource>();
     }
 
     protected override void OnUpdate()
@@ -59,6 +70,8 @@ public class PlayerUnitController : UnitController
     private void GameInput_PlayerMovedRequested(object sender, Vector3 e)
     {
         this.SetDestination( e );
+
+        this.audioSource.PlayOneShot( this.onMoveAudioClip, 0.5f );
     }
 
     public override void AttackHits(UnitController target)
