@@ -44,4 +44,13 @@ public class VictoryScreenUI : MonoBehaviour
         // Deactivate the UI.
         gameObject.SetActive( false );
     }
+
+    /// <summary>
+    /// Exits to the main menu.
+    /// </summary>
+    public void ExitToMainMenu()
+    {
+        // Load the main menu scene.
+        UnityEngine.SceneManagement.SceneManager.LoadScene( "MainMenu" );
+    }
 }
