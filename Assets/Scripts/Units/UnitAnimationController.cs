@@ -28,14 +28,14 @@ public class UnitAnimationController : MonoBehaviour
         public const string Death = "Death";
     }
     
-    private void Awake()
+    protected virtual void Awake()
     {
         // Get the components that this controller will rely on.
         this.animator = GetComponent<Animator>();
 
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         // Set initial animation states.
         this.animator.SetBool( AnimationState.IsRunning, this.isMoving );
