@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent( typeof( AudioSource ) )]
@@ -7,7 +8,10 @@ public class SwordsmanAudioPlayer : MonoBehaviour
     private AudioClip attackAudioClip;
 
     [SerializeField]
-    private float attackVolume = 0.25f;
+    private AudioClip deathAudioClip;
+
+    [SerializeField]
+    private float attackVolume = 1f;
 
     [SerializeField]
     private UnitController unitController;
@@ -25,10 +29,17 @@ public class SwordsmanAudioPlayer : MonoBehaviour
     private void Start()
     {
         this.unitController.OnPerformAttack += UnitController_OnPerformAttack;
+        this.unitController.UnitDied += UnitController_UnitDied;
     }
 
     private void UnitController_OnPerformAttack(object sender, UnitController e)
     {
         this.audioSource.PlayOneShot( this.attackAudioClip, this.attackVolume );
     }
+
+    private void UnitController_UnitDied(object sender, UnitController e)
+    {
+        this.audioSource.PlayOneShot( this.deathAudioClip, this.attackVolume );
+    }
+
 }
