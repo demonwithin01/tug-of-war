@@ -21,10 +21,11 @@ public class ArcherUnitController : CreepUnitController
     {
         if ( base.UnitAttackTarget != null )
         {
-            GameObject arrow = GameObject.Instantiate( this.arrowPrefab, this.arrowSpawnPoint.position, Quaternion.identity );
-        
-            arrow.transform.LookAt( base.UnitAttackTarget.transform );
-            // arrow.GetComponent<ArrowProjectile>().Initialize( base.UnitAttackTarget.transform );
+            GameObject arrowGameObject = GameObject.Instantiate( this.arrowPrefab, this.arrowSpawnPoint.position, Quaternion.identity );
+            
+            ArrowController arrow = arrowGameObject.GetComponent<ArrowController>();
+
+            arrow.LaunchAtTarget( base.UnitAttackTarget, this.arrowSpawnPoint.position );
         }
         else
         {

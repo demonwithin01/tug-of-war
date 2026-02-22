@@ -10,6 +10,12 @@ public abstract class UnitController : MonoBehaviour
     public event EventHandler<UnitController> UnitDied;
     public event EventHandler<UnitController> OnPerformAttack;
 
+    /// <summary>
+    /// The point that this unit can be attacked at. This is used for determining where projectiles should aim at, and also for determining whether the unit is within attack range of another unit.
+    /// </summary>
+    [SerializeField]
+    private Transform unitTargetPoint;
+
     [SerializeField]
     private float attackRange = 1.2f;
 
@@ -85,6 +91,11 @@ public abstract class UnitController : MonoBehaviour
     /// Gets the current enemy that this unit is targeting.
     /// </summary>
     public UnitController UnitAttackTarget => this.unitAttackTarget;
+
+    /// <summary>
+    /// Gets the point that this unit can be attacked at. This is used for determining where projectiles should aim at, and also for determining whether the unit is within attack range of another unit.
+    /// </summary>
+    public Transform UnitTargetPoint => this.unitTargetPoint;
 
     /// <summary>
     /// Gets the NavMeshAgent component for this unit.

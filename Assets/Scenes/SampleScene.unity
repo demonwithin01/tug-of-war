@@ -321,6 +321,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Barracks
       objectReference: {fileID: 0}
+    - target: {fileID: 7825387743078839316, guid: 241e9259d0c1ed642ad706f2622573c8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -791,6 +795,37 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!1 &337135129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 337135130}
+  m_Layer: 6
+  m_Name: UnitTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &337135130
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 337135129}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 5.2099986, y: 0.75, z: 18.600002}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 593817811}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &409969955
 GameObject:
   m_ObjectHideFlags: 0
@@ -4894,6 +4929,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Archer
       objectReference: {fileID: 0}
+    - target: {fileID: 2049386097159013401, guid: ddbaccaa5e370f3b2b553a006666fdb5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4874189789186254681, guid: ddbaccaa5e370f3b2b553a006666fdb5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6172,6 +6211,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: c6d9522ff5c4c9c92a799a385c80213f, type: 3}
     - target: {fileID: 8522823208183658213, guid: 00e918b4544b65ef5ac45501c17936c9, type: 3}
+      propertyPath: unitTargetPoint
+      value: 
+      objectReference: {fileID: 337135130}
+    - target: {fileID: 8522823208183658213, guid: 00e918b4544b65ef5ac45501c17936c9, type: 3}
       propertyPath: destinationMarker
       value: 
       objectReference: {fileID: 1841757782}
@@ -6190,7 +6233,10 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 5962890351113601842, guid: 00e918b4544b65ef5ac45501c17936c9, type: 3}
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8232829848059861562, guid: 00e918b4544b65ef5ac45501c17936c9, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 337135130}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 490451842819431914, guid: 00e918b4544b65ef5ac45501c17936c9, type: 3}
       insertIndex: -1

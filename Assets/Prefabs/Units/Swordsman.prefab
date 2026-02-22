@@ -9494,6 +9494,7 @@ Transform:
   m_Children:
   - {fileID: 291297950864645479}
   - {fileID: 5203697758741021282}
+  - {fileID: 2440137100868980890}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &9542722
@@ -9602,6 +9603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69261c2e02ba6d8e3a00850cfd2775ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreepUnitController
+  unitTargetPoint: {fileID: 2440137100868980890}
   attackRange: 1.5
   baseAttackTime: 3
   baseDamage: 50
@@ -20752,6 +20754,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.09100516, y: -0.05209069, z: 0.00000014901161}
     m_Extent: {x: 0.56203955, y: 0.351475, z: 0.7707151}
   m_DirtyAABB: 0
+--- !u!1 &8478434847655664592
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2440137100868980890}
+  m_Layer: 6
+  m_Name: UnitTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2440137100868980890
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8478434847655664592}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 438990}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8853814020345294409
 GameObject:
   m_ObjectHideFlags: 0
