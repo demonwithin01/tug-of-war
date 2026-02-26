@@ -1,12 +1,18 @@
 using System;
 using UnityEngine;
 
-public class CreepUnitController : UnitController
+[DefaultExecutionOrder( 20 )]
+public abstract class CreepUnitController : UnitController
 {
-    private void Start()
+    public abstract string UnitTypeName { get; }
+
+    protected override void OnStart()
     {
         // Creeper units should start moving immediately.
-        this.GetComponent<UnitAnimationController>().StartRunning();
+        // this.GetComponent<Animator>().Play( "Run" );
+        // this.GetComponent<UnitAnimationController>().StartRunning();
+
+        base.OnStart();
     }
 
     protected override void EnemyManager_NewTargetAcquired(object sender, UnitController e)

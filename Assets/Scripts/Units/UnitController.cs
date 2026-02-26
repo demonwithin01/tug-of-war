@@ -124,6 +124,10 @@ public abstract class UnitController : MonoBehaviour
 
     public abstract void AttackHits( UnitController target );
 
+    private void Start()
+    {
+        this.OnStart();
+    }
 
     private void Awake()
     {
@@ -168,6 +172,11 @@ public abstract class UnitController : MonoBehaviour
         // Trigger the attack timer to update. Only let it raise the event if the unit is currently in attack mode.
         // This will allow the attack cooldown to expire when the unit is moving.
         this.attackTimer.Tick( isAttacking );
+    }
+
+    protected virtual void OnStart()
+    {
+        
     }
 
     protected virtual void OnAwake()
@@ -270,6 +279,7 @@ public abstract class UnitController : MonoBehaviour
     /// </summary>
     private void MoveToTarget( Vector3 targetPosition )
     {
+        // Ensure that the nav mesh agent is running.
         if ( this == null || this.navMeshAgent.enabled == false ||this.isActiveAndEnabled == false )
         {
             return;
@@ -277,7 +287,6 @@ public abstract class UnitController : MonoBehaviour
 
         try
         {
-            // Ensure that the nav mesh agent is running.
             this.navMeshAgent.isStopped = false;
             this.navMeshAgent.SetDestination( targetPosition );
         }

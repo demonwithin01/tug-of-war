@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ArcherUnitController : CreepUnitController
 {
+    override public string UnitTypeName => "Archer";
+    
     [SerializeField]
     private Transform arrowSpawnPoint;
 

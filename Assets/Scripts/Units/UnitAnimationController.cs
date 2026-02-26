@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[DefaultExecutionOrder( 21 )]
 public class UnitAnimationController : MonoBehaviour
 {
     // States

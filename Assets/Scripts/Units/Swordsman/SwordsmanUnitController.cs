@@ -1,5 +1,6 @@
 public class SwordsmanUnitController : CreepUnitController
 {
+    override public string UnitTypeName => "Swordsman";
 
     protected override void OnAwake()
     {

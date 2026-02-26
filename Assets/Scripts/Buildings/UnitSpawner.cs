@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,6 +24,8 @@ public class UnitSpawner : MonoBehaviour
     private float spawnTimer = 0f;
 
     private int spawnCount = 0;
+
+    private Dictionary<GameObject, Coroutine> spawnedUnitsToCoroutines = new Dictionary<GameObject, Coroutine>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -84,6 +88,28 @@ public class UnitSpawner : MonoBehaviour
 
         NavMeshAgent unitNavMeshAgent = unit.GetComponent<NavMeshAgent>();
         unitNavMeshAgent.Warp( this.spawnLocation.transform.position );
+
         unitNavMeshAgent.SetDestination( opposingBaseLocation );
+
+        Coroutine coroutine = StartCoroutine(StartRunning( unit ));
+        this.spawnedUnitsToCoroutines.Add( unit, coroutine );
+    }
+
+
+    private IEnumerator StartRunning( GameObject unit )
+    {
+        if ( this.spawnedUnitsToCoroutines.ContainsKey( unit ) == false )
+        {
+            yield return new WaitForSeconds( 0.1f );
+        }
+
+        unit.GetComponent<UnitAnimationController>().StartRunning();
+
+        Coroutine coroutine = this.spawnedUnitsToCoroutines[ unit ];
+
+        StopCoroutine( coroutine );
+        this.spawnedUnitsToCoroutines.Remove( unit );
+
+        yield return null;
     }
 }
