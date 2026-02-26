@@ -10,9 +10,9 @@ public class ArcherUnitController : CreepUnitController
 
     protected override void OnAwake()
     {
-        ArcherUnitAnimationController animationController = GetComponentInParent<ArcherUnitAnimationController>();
+        UnitAttackAnimationTrigger animationController = GetComponentInParent<UnitAttackAnimationTrigger>();
 
-        animationController.AttackTriggered += ( sender, args ) => SpawnArrow();
+        animationController.AttackTriggered += ( sender, args ) => this.SpawnArrow();
 
         base.OnAwake();
     }
@@ -26,6 +26,8 @@ public class ArcherUnitController : CreepUnitController
             ArrowController arrow = arrowGameObject.GetComponent<ArrowController>();
 
             arrow.LaunchAtTarget( base.UnitAttackTarget, this.arrowSpawnPoint.position );
+
+            base.ClearPerformingAttackAgainst();
         }
         else
         {

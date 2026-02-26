@@ -1,15 +1,9 @@
-
 using System;
-using System.Diagnostics;
+using UnityEngine;
 
-public class ArcherUnitAnimationController : UnitAnimationController
+public class UnitAttackAnimationTrigger : MonoBehaviour
 {
     public event EventHandler AttackTriggered;
-
-    protected override void Start()
-    {
-        base.Start();
-    }
 
     public void AttackCompleted()
     {

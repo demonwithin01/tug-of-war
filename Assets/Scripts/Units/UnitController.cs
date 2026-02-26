@@ -113,6 +113,11 @@ public abstract class UnitController : MonoBehaviour
     protected EnemyManager EnemyManager => this.enemyManager;
 
     /// <summary>
+    /// Gets the unit that we are performing the attack against.
+    /// </summary>
+    protected UnitController PerformingAttackAgainst => this.performingAttackAgainst;
+
+    /// <summary>
     /// Gets the attack timer.
     /// </summary>
     protected TimedAction AttackTimer { get; set; }
@@ -363,20 +368,28 @@ public abstract class UnitController : MonoBehaviour
     }
 
     /// <summary>
-    /// Handle when the attack lands on the unit.
+    /// Removes the 'performingAttackAgainst' value, which is used for determining whether the unit should apply damage when the attack animation finishes. This is used in case the unit is no longer attacking the same target when the attack animation finishes.
     /// </summary>
-    public void AttackLands()
+    protected void ClearPerformingAttackAgainst()
     {
-        // Ensure that we are still attacking the same unit, just in case the unit is no longer the target when the animation ends.
-        if ( this.performingAttackAgainst == this.unitAttackTarget )
-        {
-            // Get the target to take damage.
-            this.AttackHits( this.performingAttackAgainst );
-            // int damage = Mathf.RoundToInt( this.baseDamage * this.combatUnit.Multipliers.AttackDamage );
-            // this.performingAttackAgainst.TakeDamage( damage );
-        }
-
-        // Remove the perform attack against value.
         this.performingAttackAgainst = null;
     }
+
+    // /// <summary>
+    // /// Handle when the attack lands on the unit.
+    // /// </summary>
+    // public void AttackLands()
+    // {
+    //     // Ensure that we are still attacking the same unit, just in case the unit is no longer the target when the animation ends.
+    //     if ( this.performingAttackAgainst == this.unitAttackTarget )
+    //     {
+    //         // Get the target to take damage.
+    //         this.AttackHits( this.performingAttackAgainst );
+    //         // int damage = Mathf.RoundToInt( this.baseDamage * this.combatUnit.Multipliers.AttackDamage );
+    //         // this.performingAttackAgainst.TakeDamage( damage );
+    //     }
+
+    //     // Remove the perform attack against value.
+    //     this.performingAttackAgainst = null;
+    // }
 }

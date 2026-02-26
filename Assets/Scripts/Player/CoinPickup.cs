@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CoinPickupo : MonoBehaviour
+public class CoinPickup : MonoBehaviour
 {
     
     private void OnTriggerEnter(Collider other)

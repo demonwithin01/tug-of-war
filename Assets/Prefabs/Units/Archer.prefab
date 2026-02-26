@@ -82,8 +82,9 @@ GameObject:
   - component: {fileID: 6291648404100604332}
   - component: {fileID: 5755914161561376637}
   - component: {fileID: 6476973797791712075}
-  - component: {fileID: 8837593012471870444}
   - component: {fileID: 7612172898244670618}
+  - component: {fileID: 4333386904856715369}
+  - component: {fileID: 7971795076432828510}
   m_Layer: 6
   m_Name: Archer
   m_TagString: Unit
@@ -329,18 +330,6 @@ MonoBehaviour:
   deathAudioClip: {fileID: 8300000, guid: 635220d2d7a628358a3f95c96449e6ff, type: 3}
   attackVolume: 0.5
   unitController: {fileID: 7612172898244670618}
---- !u!114 &8837593012471870444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2049386097159013401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff743a7c4c630708182dc4d3f3c7fd39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ArcherUnitAnimationController
 --- !u!114 &7612172898244670618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,6 +351,30 @@ MonoBehaviour:
   baseGold: 1
   arrowSpawnPoint: {fileID: 4700914980104856477}
   arrowPrefab: {fileID: 5816290355631566938, guid: 3488fc35ea071a2fa9c6dcf28392b08f, type: 3}
+--- !u!114 &4333386904856715369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049386097159013401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ffe5ec118fe5827da7b058cee884cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitAttackAnimationTrigger
+--- !u!114 &7971795076432828510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049386097159013401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5df1c22b12c7237ab0c44fbf8155d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitAnimationController
 --- !u!1 &3895473632593237498
 GameObject:
   m_ObjectHideFlags: 0
