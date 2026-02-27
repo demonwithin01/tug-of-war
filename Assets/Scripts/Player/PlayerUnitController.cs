@@ -58,7 +58,7 @@ public class PlayerUnitController : UnitController
             this.lastStandingPosition = this.transform.position;
         }
 
-        base.AttackTarget( e );
+        base.MoveToAttack( e );
     }
 
     protected override void EnemyManager_NoTargetsInRange(object sender, EventArgs e)

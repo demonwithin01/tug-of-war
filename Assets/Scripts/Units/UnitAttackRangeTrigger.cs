@@ -1,45 +1,37 @@
 using System;
 using UnityEngine;
 
-[DefaultExecutionOrder( 22 )]
-public class EnemyDetection : MonoBehaviour
+[DefaultExecutionOrder( 23 )]
+public class UnitAttackRangeTrigger : MonoBehaviour
 {
-    public class EnemyDetectionEventArgs
+    public class UnitWithinRangeArgs
     {
         public UnitController OpposingTeamUnit { get; private set; }
 
-        public EnemyDetectionEventArgs( UnitController unit )
+        public UnitWithinRangeArgs( UnitController unit )
         {
             this.OpposingTeamUnit = unit;
         }
     }
 
-    public event EventHandler<EnemyDetectionEventArgs> EnemyDetected;
-    public event EventHandler<EnemyDetectionEventArgs> EnemyLeft;
+    public event EventHandler<UnitWithinRangeArgs> EnemyEnteredAttackRange;
+    public event EventHandler<UnitWithinRangeArgs> EnemyLeftAttackRange;
 
     private int teamNumber;
 
-    /// <summary>
-    /// Trigger handler for when something enters the 'attraction' zone.
-    /// </summary>
     private void OnTriggerEnter( Collider other )
     {
-        // We only care about opposing Units.
         if ( TryGetUnitController( other, out UnitController opposingTeamUnit ) )
         {
-            EnemyDetected?.Invoke( this, new EnemyDetectionEventArgs( opposingTeamUnit ) );
+            EnemyEnteredAttackRange?.Invoke( this, new UnitWithinRangeArgs( opposingTeamUnit ) );
         }
     }
 
-    /// <summary>
-    /// Trigger handler for when something leaves the 'attraction' zone.
-    /// </summary>
     private void OnTriggerExit( Collider other )
     {
-        // We only care about opposing Units.
         if ( TryGetUnitController( other, out UnitController opposingTeamUnit ) )
         {
-            EnemyLeft?.Invoke( this, new EnemyDetectionEventArgs( opposingTeamUnit ) );
+            EnemyLeftAttackRange?.Invoke( this, new UnitWithinRangeArgs( opposingTeamUnit ) );
         }
     }
 

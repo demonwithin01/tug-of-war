@@ -59,6 +59,7 @@ public abstract class UnitController : MonoBehaviour
     /// The current unit that is being targeted.
     /// </summary>
     private UnitController unitAttackTarget = null;
+    private UnitController movingToAttackTarget = null;
     /// <summary>
     /// The current unit that this unit is currently performing an attack against.
     /// </summary>
@@ -199,7 +200,7 @@ public abstract class UnitController : MonoBehaviour
     private void HandleAttackTarget()
     {
         // If the target is within attacking range...
-        if ( IsWithinAttackRange() )
+        if ( this.unitAttackTarget != null )
         {
             if ( isAttacking == false )
             {
@@ -213,10 +214,10 @@ public abstract class UnitController : MonoBehaviour
                 this.animationController.StopRunning();
             }
         }
-        else
+        else if ( this.movingToAttackTarget != null)
         {
             // Otherwise tell the unit to move towards the attack target.
-            this.navMeshAgent.SetDestination( this.unitAttackTarget.transform.position );
+            this.navMeshAgent.SetDestination( this.movingToAttackTarget.transform.position );
         }
     }
 
@@ -233,16 +234,25 @@ public abstract class UnitController : MonoBehaviour
         this.OnPerformAttack?.Invoke( this, this.performingAttackAgainst );
     }
 
-    protected void AttackTarget( UnitController target )
+    protected void MoveToAttack( UnitController target )
     {
-        this.unitAttackTarget = target;
-        MoveToTarget( target.transform.position );
-
-        // If they are not within attack range...
-        if ( IsWithinAttackRange() == false )
+        if ( this.unitAttackTarget != null )
         {
-            // Then reset them to moving and not attacking.
-            ApplyMoveAnimation();
+            return;
+        }
+
+        this.movingToAttackTarget = target;
+        MoveToTarget( target.transform.position );
+        ApplyMoveAnimation();
+    }
+
+    protected void TargetWithinAttackRange( UnitController target )
+    {
+        Debug.Log( $"Target {target.name} within attack range of {this.name}" );
+        if ( this.unitAttackTarget == null )
+        {
+            this.unitAttackTarget = target;
+            this.movingToAttackTarget = target;
         }
     }
 
@@ -250,11 +260,12 @@ public abstract class UnitController : MonoBehaviour
     {
         // Remove the attack target.
         this.unitAttackTarget = null;
+        this.movingToAttackTarget = null;
         this.isAttacking = false;
 
         // Tell the unit to go towards the new target.
         MoveToTarget( moveToPosition );
-
+        
         // Ensure that the unit is in the moving animation.
         ApplyMoveAnimation();
     }
@@ -383,22 +394,4 @@ public abstract class UnitController : MonoBehaviour
     {
         this.performingAttackAgainst = null;
     }
-
-    // /// <summary>
-    // /// Handle when the attack lands on the unit.
-    // /// </summary>
-    // public void AttackLands()
-    // {
-    //     // Ensure that we are still attacking the same unit, just in case the unit is no longer the target when the animation ends.
-    //     if ( this.performingAttackAgainst == this.unitAttackTarget )
-    //     {
-    //         // Get the target to take damage.
-    //         this.AttackHits( this.performingAttackAgainst );
-    //         // int damage = Mathf.RoundToInt( this.baseDamage * this.combatUnit.Multipliers.AttackDamage );
-    //         // this.performingAttackAgainst.TakeDamage( damage );
-    //     }
-
-    //     // Remove the perform attack against value.
-    //     this.performingAttackAgainst = null;
-    // }
 }

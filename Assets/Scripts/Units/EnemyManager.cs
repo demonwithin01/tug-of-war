@@ -5,21 +5,25 @@ using System.Linq;
 
 public class EnemyManager : MonoBehaviour
 {
+
     public event EventHandler<UnitController> NewTargetAcquired;
+    public event EventHandler<UnitController> TargetWithinAttackRange;
     public event EventHandler NoTargetsInRange;
 
     /// <summary>
-    /// The list of enemies that are within range of this unit.
+    /// The list of enemies that are within range of this unit for it to start moving towards them. This is the 'attraction' range, which is larger than the attack range. Enemies within this range will be tracked and the unit will attempt to move towards them, but they will not be attacked until they are within the attack range.
     /// </summary>
-    private List<UnitController> enemiesWithinRange = new();
+    private List<UnitController> enemiesWithinPullRange = new();
 
     /// <summary>
-    /// The list of enemies that are within range of this unit.
+    /// The list of enemies that are within range of this unit for it to start attacking. This is the 'attack' range, which is smaller than the attraction range. Enemies within this range will be attacked by the unit.
     /// </summary>
+    private List<UnitController> enemiesWithinAttackRange = new();
+
     /// <remarks>
     /// This list should not be able to be modified outside of this object.
     /// </remarks>
-    public IReadOnlyList<UnitController> EnemiesWithinRange => this.enemiesWithinRange;
+    public IReadOnlyList<UnitController> EnemiesWithinRange => this.enemiesWithinPullRange;
 
     public UnitController CurrentTarget { get; private set; }
 
@@ -29,11 +33,15 @@ public class EnemyManager : MonoBehaviour
         EnemyDetection enemyDetection = GetComponentInChildren<EnemyDetection>();
         enemyDetection.EnemyDetected += this.EnemyDetection_EnemyDetected;
         enemyDetection.EnemyLeft += this.EnemyDetection_EnemyLeft;
+
+        UnitAttackRangeTrigger attackRangeTrigger = GetComponentInChildren<UnitAttackRangeTrigger>();
+        attackRangeTrigger.EnemyEnteredAttackRange += this.AttackRangeTrigger_EnemyEnteredAttackRange;
+        attackRangeTrigger.EnemyLeftAttackRange += this.AttackRangeTrigger_EnemyLeft;
     }
 
     private void OnDestroy()
     {
-        this.enemiesWithinRange.Clear();
+        this.enemiesWithinPullRange.Clear();
     }
 
     /// <summary>
@@ -42,9 +50,9 @@ public class EnemyManager : MonoBehaviour
     private void EnemyDetection_EnemyDetected( object sender, EnemyDetection.EnemyDetectionEventArgs e )
     {
          // If the unit is not already in the list of enemies within range, add it to the list and subscribe to its death event.
-        if ( this.enemiesWithinRange.Contains( e.OpposingTeamUnit ) == false )
+        if ( this.enemiesWithinPullRange.Contains( e.OpposingTeamUnit ) == false )
         {
-            this.enemiesWithinRange.Add( e.OpposingTeamUnit );
+            this.enemiesWithinPullRange.Add( e.OpposingTeamUnit );
 
             e.OpposingTeamUnit.UnitDied += OpposingTeamUnit_UnitDied;
 
@@ -63,12 +71,45 @@ public class EnemyManager : MonoBehaviour
         this.RemoveTrackedEnemy( e.OpposingTeamUnit );
     }
 
+    private void AttackRangeTrigger_EnemyLeft(object sender, UnitAttackRangeTrigger.UnitWithinRangeArgs e)
+    {
+        if ( this.enemiesWithinAttackRange.Contains( e.OpposingTeamUnit ) )
+        {
+            this.enemiesWithinAttackRange.Remove( e.OpposingTeamUnit );
+        }
+    }
+
+    private void AttackRangeTrigger_EnemyEnteredAttackRange(object sender, UnitAttackRangeTrigger.UnitWithinRangeArgs e)
+    {
+        if ( this.enemiesWithinAttackRange.Contains( e.OpposingTeamUnit ) == false )
+        {
+            this.enemiesWithinAttackRange.Add( e.OpposingTeamUnit );
+        }
+
+        if ( this.CurrentTarget == null || this.CurrentTarget == e.OpposingTeamUnit )
+        {
+            this.AttackTargetWithinRange( e.OpposingTeamUnit );
+        }
+
+        if ( this.CurrentTarget != e.OpposingTeamUnit && this.enemiesWithinAttackRange.Contains( this.CurrentTarget ) == false )
+        {
+            AttackTargetWithinRange( e.OpposingTeamUnit );
+        }
+    }
+
     /// <summary>
     /// Handler for when a tracked enemy dies. This will remove the unit from the list of tracked enemies and update the current target if necessary.
     /// </summary>
     private void OpposingTeamUnit_UnitDied(object sender, UnitController e)
     {
         this.RemoveTrackedEnemy( e );
+    }
+
+    private void AttackTargetWithinRange( UnitController target )
+    {
+        this.CurrentTarget = target;
+        this.ApplyTarget( target );
+        TargetWithinAttackRange?.Invoke(this, target);
     }
 
     /// <summary>
@@ -79,6 +120,11 @@ public class EnemyManager : MonoBehaviour
         this.CurrentTarget = unitController;
 
         NewTargetAcquired?.Invoke(this, unitController);
+
+        if ( this.enemiesWithinAttackRange.Contains( unitController ) )
+        {
+            TargetWithinAttackRange?.Invoke(this, unitController);
+        }
     }
 
     /// <summary>
@@ -99,16 +145,16 @@ public class EnemyManager : MonoBehaviour
 
         float? closestDistance = null;
 
-        this.enemiesWithinRange = this.enemiesWithinRange.FindAll( unit => unit != null && unit.isActiveAndEnabled && unit.IsAlive );
+        this.enemiesWithinPullRange = this.enemiesWithinPullRange.FindAll( unit => unit != null && unit.isActiveAndEnabled && unit.IsAlive );
 
         // If there are no enemies within range, return null (no targets).
-        if ( this.enemiesWithinRange.Count == 0 )
+        if ( this.enemiesWithinPullRange.Count == 0 )
         {
             return null;
         }
 
         // Otherwise find the closest target and return that.
-        foreach( UnitController unit in this.enemiesWithinRange )
+        foreach( UnitController unit in this.enemiesWithinPullRange )
         {
             float distance = this.GetDistanceTo( unit );
 
@@ -135,9 +181,9 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     private void RemoveTrackedEnemy( UnitController unit )
     {
-        if ( this.enemiesWithinRange.Contains( unit ) )
+        if ( this.enemiesWithinPullRange.Contains( unit ) )
         {
-            this.enemiesWithinRange.Remove( unit );
+            this.enemiesWithinPullRange.Remove( unit );
             unit.UnitDied -= OpposingTeamUnit_UnitDied;
 
             if ( this.CurrentTarget == unit )
@@ -153,6 +199,11 @@ public class EnemyManager : MonoBehaviour
                     NoTargetsInRange?.Invoke(this, EventArgs.Empty);
                 }
             }
+        }
+
+        if ( this.enemiesWithinAttackRange.Contains( unit ) )
+        {
+            this.enemiesWithinAttackRange.Remove( unit );
         }
     }
 
