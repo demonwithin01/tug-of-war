@@ -135,7 +135,7 @@ public class EnemyManager : MonoBehaviour
         UnitController closestTarget = null;
 
         // If the object has been destroyed, do not find a new unit to attack.
-        if ( this == null || this.isActiveAndEnabled == false )
+        if ( this == null || this.gameObject.activeSelf == false )
         {
             return null;
         }
@@ -145,7 +145,7 @@ public class EnemyManager : MonoBehaviour
 
         float? closestDistance = null;
 
-        this.enemiesWithinPullRange = this.enemiesWithinPullRange.FindAll( unit => unit != null && unit.isActiveAndEnabled && unit.IsAlive );
+        this.enemiesWithinPullRange = this.enemiesWithinPullRange.FindAll( unit => unit != null && unit.gameObject.activeSelf && unit.IsAlive );
 
         // If there are no enemies within range, return null (no targets).
         if ( this.enemiesWithinPullRange.Count == 0 )
@@ -181,6 +181,11 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     private void RemoveTrackedEnemy( UnitController unit )
     {
+        if ( this.enemiesWithinAttackRange.Contains( unit ) )
+        {
+            this.enemiesWithinAttackRange.Remove( unit );
+        }
+
         if ( this.enemiesWithinPullRange.Contains( unit ) )
         {
             this.enemiesWithinPullRange.Remove( unit );
@@ -188,22 +193,18 @@ public class EnemyManager : MonoBehaviour
 
             if ( this.CurrentTarget == unit )
             {
-                this.CurrentTarget = FindGreatestThreatWithinRange();
+                UnitController newEnemyTarget = FindGreatestThreatWithinRange();
 
-                if ( this.CurrentTarget != null )
+                if ( newEnemyTarget != null )
                 {
-                    NewTargetAcquired?.Invoke(this, this.CurrentTarget);
+                    ApplyTarget( newEnemyTarget );
                 }
                 else
                 {
+                    this.CurrentTarget = null;
                     NoTargetsInRange?.Invoke(this, EventArgs.Empty);
                 }
             }
-        }
-
-        if ( this.enemiesWithinAttackRange.Contains( unit ) )
-        {
-            this.enemiesWithinAttackRange.Remove( unit );
         }
     }
 

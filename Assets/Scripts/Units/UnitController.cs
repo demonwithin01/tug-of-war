@@ -236,19 +236,21 @@ public abstract class UnitController : MonoBehaviour
 
     protected void MoveToAttack( UnitController target )
     {
-        if ( this.unitAttackTarget != null )
+        if ( this.unitAttackTarget == target )
         {
             return;
         }
 
+        this.ClearAttackUnitTarget();
+
         this.movingToAttackTarget = target;
+
         MoveToTarget( target.transform.position );
         ApplyMoveAnimation();
     }
 
     protected void TargetWithinAttackRange( UnitController target )
     {
-        Debug.Log( $"Target {target.name} within attack range of {this.name}" );
         if ( this.unitAttackTarget == null )
         {
             this.unitAttackTarget = target;
@@ -259,9 +261,8 @@ public abstract class UnitController : MonoBehaviour
     protected void RemoveAttackTarget( Vector3 moveToPosition )
     {
         // Remove the attack target.
-        this.unitAttackTarget = null;
+        this.ClearAttackUnitTarget();
         this.movingToAttackTarget = null;
-        this.isAttacking = false;
 
         // Tell the unit to go towards the new target.
         MoveToTarget( moveToPosition );
@@ -283,6 +284,15 @@ public abstract class UnitController : MonoBehaviour
         float distanceToTarget = GetDistanceTo( this.unitAttackTarget );
 
         return distanceToTarget <= this.attackRange;
+    }
+
+    /// <summary>
+    /// Removes the current attack target (not the target that we might be moving towards).
+    /// </summary>
+    private void ClearAttackUnitTarget()
+    {
+        this.unitAttackTarget = null;
+        this.isAttacking = false;
     }
 
     /// <summary>
