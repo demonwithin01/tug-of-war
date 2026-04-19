@@ -61,6 +61,9 @@ public class RandomUpgradeSelectorUI : MonoBehaviour
         // Disable game input while the UI is active.
         GameInput.Instance.DisableGameInput();
 
+        // Pause the game while the UI is active.
+        Time.timeScale = 0f;
+
         // Get random upgrades to show in the UI.
         List<UpgradeSO> randomUpgrades = this.upgradesController.GetRandomUpgradesForUI();
 
@@ -86,6 +89,9 @@ public class RandomUpgradeSelectorUI : MonoBehaviour
         // Deactivate the UI.
         gameObject.SetActive( false );
         
+        // Resume the game when the UI is hidden.
+        Time.timeScale = 1f;
+
         // Re-enable game input.
         GameInput.Instance.EnableGameInput();
 
