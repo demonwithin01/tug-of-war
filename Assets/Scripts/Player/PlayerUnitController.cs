@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.AI;
 
 [DefaultExecutionOrder(100)] 
 [RequireComponent( typeof( AudioSource ) )]
@@ -13,9 +12,6 @@ public class PlayerUnitController : UnitController
     private AudioClip onMoveAudioClip;
 
     private AudioSource audioSource;
-
-    private Vector3? lastStandingPosition = null;
-    private Vector3? userIntendedDestination = null;
 
     private void Start()
     {
@@ -32,11 +28,7 @@ public class PlayerUnitController : UnitController
 
     protected override void OnUpdate()
     {
-        if ( this.userIntendedDestination.HasValue && this.NavMeshAgent.remainingDistance <= this.NavMeshAgent.stoppingDistance )
-        {
-            this.userIntendedDestination = null;
-            base.EnemyManager.FindTarget();
-        }
+        
     }
 
     protected override void TeamInitialised()
@@ -46,25 +38,12 @@ public class PlayerUnitController : UnitController
 
     protected override void EnemyManager_NewTargetAcquired(object sender, UnitController e)
     {
-        // Do not attempt to attack a target if the player has explicitly set a destination for the unit to go to.
-        if ( this.userIntendedDestination.HasValue )
-        {
-            base.EnemyManager.ClearCurrentTarget();
-            return;
-        }
-
-        if ( this.lastStandingPosition.HasValue == false )
-        {
-            this.lastStandingPosition = this.transform.position;
-        }
-
-        base.MoveToAttack( e );
+        
     }
 
     protected override void EnemyManager_NoTargetsInRange(object sender, EventArgs e)
     {
-        Vector3 targetPosition = this.lastStandingPosition ?? this.userIntendedDestination ?? this.transform.position;
-        base.RemoveAttackTarget( targetPosition );
+        
     }
 
     private void GameInput_PlayerMovedRequested(object sender, Vector3 e)
@@ -82,7 +61,6 @@ public class PlayerUnitController : UnitController
 
     public void SetDestination( Vector3 position )
     {
-        this.userIntendedDestination = position;
         this.destinationMarker.SetDestinationMarker( position );
         base.RemoveAttackTarget( position );
     }

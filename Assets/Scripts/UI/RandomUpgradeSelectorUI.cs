@@ -96,9 +96,9 @@ public class RandomUpgradeSelectorUI : MonoBehaviour
         GameInput.Instance.EnableGameInput();
 
         // Destroy panels.
-        foreach (UpgradePanelUI child in upgradePanels)
+        foreach ( UpgradePanelUI child in upgradePanels )
         {
-            Destroy(child.gameObject);
+            Destroy( child.gameObject );
         }
         upgradePanels.Clear();
     }
